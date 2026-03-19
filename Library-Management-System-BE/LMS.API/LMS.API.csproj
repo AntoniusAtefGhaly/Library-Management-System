@@ -1,0 +1,264 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPPlus.System.Drawing" Version="6.1.1" />
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.20" />
+    <PackageReference Include="Hangfire.SqlServer" Version="1.8.20" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.13" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.13" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.2" />
+    <PackageReference Include="Scrutor" Version="6.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Uploads\Authors\0118303f-f410-4423-8dab-5e23924cdef0_20250402_181147.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\01b9911a-95d3-4c3a-9804-277975eaa64a_20250402_151129.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\020d9f52-b759-409f-917f-7398872c34e5_20250402_160625.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\0297a2d9-9446-4c66-abac-08def7694da4_20250402_150936.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\0c495402-9543-4952-8f69-66f39043f4f7_20250402_180804.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\0ccec7b7-5cfb-4c26-bb60-fe2f7330c262_20250402_193740.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\10bd6ef3-f10e-4af4-bcb1-478f7477fc31_20250402_201028.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\12182613-e50e-4a56-9e91-2e3ae33becb1_20250402_151529.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\1620c1c2-16ba-4c2b-a862-9f666a1d6d6f_20250402_160547.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\183bd937-d422-4627-81fd-748e3fc64b9c_20250402_155915.webp" />
+    <None Include="wwwroot\Uploads\Authors\19ec7112-76eb-471d-8cb1-f3ebbc162b35_20250402_152113.webp" />
+    <None Include="wwwroot\Uploads\Authors\1be5aefe-56c4-4d1e-b87c-aaf3211c5acf_20250402_160002.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\1d7bcd51-19c9-496a-a341-dc25febf89b7_20250402_193321.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\1df19d32-8a82-4bda-b4b2-e448c459c7e3_20250402_160708.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\1e0f58a7-04d3-4a67-acde-7df83d2dce5a_20250402_181011.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\1e57ef9d-7979-4eb3-baa6-5d94cbf9dd9d_20250402_151431.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\2594a8a6-b3f1-4850-b4bd-2df8ed9150cd_20250402_155915.webp" />
+    <None Include="wwwroot\Uploads\Authors\26201ade-0cb7-44a2-8c42-3ad4a1f989c5_20250402_151223.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\31135bbd-4433-42df-8c99-d2e083344fdb_20250402_174850.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\3117b815-61d3-4ba5-8171-6a6c5b38e2d2_20250402_152017.jpg" />
+    <None Include="wwwroot\Uploads\Authors\3417f9df-a281-426e-8a83-5e163cbad1bf_20250402_160708.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\3486c6f8-4ebe-40cb-93d6-d3519f594ef3_20250402_174813.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\3697df34-d29d-4fa0-9517-8abf6edb9d57_20250402_193956.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\37a63710-8f1f-4edb-95d3-dd598ae94a3f_20250528_221735.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\37cec819-13d2-4923-9d75-e17474d414a2_20250402_175816.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\411a1b06-427f-4629-8b2b-634ba6607dd1_20250402_160756.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\43c1798a-524f-4b5b-993a-05a9d2f2f861_20250402_160041.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\44427073-8d83-4b90-8824-1c5e9e472251_20250402_181147.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\475d6e1b-e566-4e20-b986-04c691089ac4_20250402_151431.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\4d15adec-12ee-4255-ae8e-2ff16a79fe96_20250402_193321.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\4fbcfb63-2d3d-4122-a6d9-e895048e1f22_20250402_160041.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\50b1a9a2-407d-401f-8e7a-0139db59d799_20250402_160108.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\51a61a13-3668-4ad1-bf72-3a485816fedc_20250402_180120.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\54704114-a1c2-41cf-9496-572d361ab2fa_20250402_193956.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\569114ec-f230-4215-8460-0dfc99e64209_20250402_160547.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\5a95aca0-8fb8-406a-ae0e-04d7e02db21f_20250402_174937.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\627a3f70-a2cb-4dbc-9cc9-315d466e146e_20250402_193607.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\67d544cf-f321-4140-b200-2cab44cf829e_20250402_174813.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\6f40020c-45e4-413c-9fcd-8dfa81a95c3a_20250402_151529.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\70053c9b-f3bb-496b-b84a-5eaff30e7e5d_20250402_160154.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\771fd702-75a5-449f-a6ef-c514e9e57717_20250402_175701.webp" />
+    <None Include="wwwroot\Uploads\Authors\782d0343-2f88-4626-8710-afac222ad046_20250402_151223.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\79d85041-8d9e-4dae-97eb-353f2b9efa55_20250402_151129.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\7b593e7a-b03e-49f2-8017-a0c72f802804_20250402_193740.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\80598739-3622-4043-a6d7-fe9891d4139d_20250402_152017.jpg" />
+    <None Include="wwwroot\Uploads\Authors\82cd6f40-8394-4dc5-87b8-c10cb7cad73c_20250402_152113.webp" />
+    <None Include="wwwroot\Uploads\Authors\844a3ef1-df57-4896-b612-77f63ed3dd23_20250402_160327.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\88c74c12-a950-4c07-995b-bfb18d1ca508_20250528_222648.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\8dcc9a1f-de9c-4185-ae6b-9e111886f1f3_20250402_150936.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\90f11a4f-36e3-4064-a4d9-f81b9ac6b41e_20250528_220953.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\9f93c6f7-8dc4-4d6a-865b-65af0ed54aaf_20250402_160002.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\a38eed70-fd98-49d9-aaca-8faec2adea2d_20250402_151501.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\aa4cf90b-37ee-484c-b56b-ac36d03e7129_20250402_150251.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ab4d2b15-8413-420c-a9c0-4954f6877742_20250402_175816.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ac48e2b5-e883-4a23-b34b-ad0fd245a19c_20250402_034713.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ac553f12-d458-483c-97cd-4e732a7a6501_20250402_034713.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ada31ec3-af92-463c-9437-52622a6ff058_20250402_160249.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\b32a0fc1-b6ea-4e5d-b68b-1cfaa3241b0a_20250619_234629.png" />
+    <None Include="wwwroot\Uploads\Authors\b4b9c56d-2b43-4764-85be-03cfcc590347_20250402_193607.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\bc98f022-05a4-4504-ac55-a6b79a59a477_20250402_180600.webp" />
+    <None Include="wwwroot\Uploads\Authors\bd9f8387-c919-4d64-be0a-4fbf56927c41_20250402_151258.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\c16aecf6-b781-470a-8dee-974cb3c93ccc_20250402_023305.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\c1a2d4d7-11b6-4be5-9455-d9fa54d7a825_20250402_180804.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\c963f5a2-e8bb-40a4-a9ed-3d80ed604ed8_20250402_160403.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\c979a01b-7192-45d1-b2a8-51efc59f9199_20250402_151258.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ca76345f-b440-44ad-b582-57f1b9a01a28_20250402_160756.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\cbb2b78f-8694-4431-a464-3a9b1726cd7f_20250402_175701.webp" />
+    <None Include="wwwroot\Uploads\Authors\cc6d8b7b-621c-45c2-abd4-c5869707b80b_20250402_180600.webp" />
+    <None Include="wwwroot\Uploads\Authors\cfd27d17-0f76-4824-9365-154ff7ee871c_20250402_181600.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\d59f3b6d-5e14-4fb8-bfa4-eb521d5b1abd_20250402_174850.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\d8674beb-3d6e-4eff-b657-99174468991d_20250402_160108.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\d86a4fb2-d5f4-40fe-b68d-311b1da2810e_20250402_160444.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\dcbb216b-ba12-4a42-ac83-1159381b8e0b_20250402_160444.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\dcdb66fd-5fb6-43f6-a8ce-9cf0ab5b4008_20250402_160625.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\e1c62018-0910-48b2-977d-ef6e78b8e2dc_20250402_150251.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\e49c9165-1f6f-4f77-9499-e2d049ef90a5_20250402_181600.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\e63b6047-7e89-4ba3-a3f0-421239b79656_20250402_151350.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\e74430cf-9961-4bc1-86eb-b48ec0681f0a_20250402_151501.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\e98b651c-282a-460f-a4ef-da733c772fe6_20250402_181011.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\e99f5368-e98f-45e4-9882-0a31999bc255_20250402_174937.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ea772cf3-f09a-46fc-a574-f56e3566e3bf_20250402_180120.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\ecd8f1b5-49ac-4fcc-aa2b-06815efe01e0_20250402_160403.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\f1b1d709-2878-4db0-a1dd-540214e6c6fc_20250402_160327.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\f72c8663-b8c9-431d-8012-0a18c45fb6e3_20250402_160154.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\f736e2fb-0b37-4698-8ead-05efc2727826_20250402_160249.jpeg" />
+    <None Include="wwwroot\Uploads\Authors\fe45d298-37ac-4728-bd64-4049a03d5d9f_20250402_151350.jpeg" />
+    <None Include="wwwroot\Uploads\Books\00e82a7d-5452-4a08-b4a0-a75eb692656c_20250329_235723.png" />
+    <None Include="wwwroot\Uploads\Books\02c79c17-fa95-4401-aacf-d4cb75a7102d_20250622_194911.jpg" />
+    <None Include="wwwroot\Uploads\Books\066d7cfc-352f-475a-a27a-c7aa4a9c43e9_20250622_200126.jpg" />
+    <None Include="wwwroot\Uploads\Books\09c2dddd-af26-4c30-a4f2-92de063962a5_20250622_200136.jpg" />
+    <None Include="wwwroot\Uploads\Books\0b89526d-29e2-414c-9855-1298f7bb42d2_20250622_151305.jpg" />
+    <None Include="wwwroot\Uploads\Books\0d317b2c-a362-4407-8dc8-94769787c7f1_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\0ff5c317-7915-4ee3-954f-4ebd7608d428_20250329_235320.jpeg" />
+    <None Include="wwwroot\Uploads\Books\1358512d-a712-4914-8cea-b3e5f048566a_20250622_191321.jpg" />
+    <None Include="wwwroot\Uploads\Books\13d072de-2a01-4a1a-97cb-50ccc4e0fa0f_20250622_142922.jpg" />
+    <None Include="wwwroot\Uploads\Books\169f079a-cfff-4d87-8f84-5a873a895504_20250330_001103.jpeg" />
+    <None Include="wwwroot\Uploads\Books\16ccf3cf-cda1-465f-9c2e-ddd95c7e86da_20250330_001343.jpeg" />
+    <None Include="wwwroot\Uploads\Books\19a4642e-b144-44d2-b37e-8773f4e9a52b_20250330_003044.jpeg" />
+    <None Include="wwwroot\Uploads\Books\1c6fe5b5-3751-4c12-8169-233111e019b8_20250622_191244.jpg" />
+    <None Include="wwwroot\Uploads\Books\1ecaf167-5c32-4f68-8c43-57b97dec2a3e_20250330_002042.jpeg" />
+    <None Include="wwwroot\Uploads\Books\1f4bb6ed-f29f-4b67-9db2-25dc5117f063_20250622_195814.jpg" />
+    <None Include="wwwroot\Uploads\Books\20012b4f-6fa1-41bb-84b8-e66b91ceb79d_20250330_003206.png" />
+    <None Include="wwwroot\Uploads\Books\23782e39-0ede-4324-b69f-63f70e9785c4_20250330_001449.jpeg" />
+    <None Include="wwwroot\Uploads\Books\240a09b8-7452-4cda-99e4-48627bfc2ba6_20250330_001414.jpeg" />
+    <None Include="wwwroot\Uploads\Books\2908219a-64bc-48d9-b657-3bb5353fed01_20250620_222644.jpeg" />
+    <None Include="wwwroot\Uploads\Books\2a44bae9-f160-4e5f-98b0-e7b05e0590d8_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\2a7a7859-0f63-4643-8c93-a8e9951fda2d_20250330_002241.png" />
+    <None Include="wwwroot\Uploads\Books\2b87c9ee-4b19-40aa-ba32-8e45a76d4a88_20250329_235032.jpeg" />
+    <None Include="wwwroot\Uploads\Books\2d209324-e47a-4a72-b249-c27a8fd9b447_20250330_000600.jpeg" />
+    <None Include="wwwroot\Uploads\Books\2ec27bb0-5430-41d6-9e10-db55a5ea961c_20250330_002741.jpeg" />
+    <None Include="wwwroot\Uploads\Books\2f0c9609-566c-4fda-b9b9-cd9fead1e986_20250329_235216.jpeg" />
+    <None Include="wwwroot\Uploads\Books\2f7ebca3-e6c4-4c0b-aeac-ff396a023c49_20250329_234906.jpeg" />
+    <None Include="wwwroot\Uploads\Books\317c1742-37a7-439c-9b23-00d0a708f7c8_20250330_000039.jpeg" />
+    <None Include="wwwroot\Uploads\Books\34a1babd-4c98-4060-83e1-4a5ba9710042_20250330_000128.jpeg" />
+    <None Include="wwwroot\Uploads\Books\35b654d4-c01d-45e9-870e-5c58ad0a380c_20250620_001438.png" />
+    <None Include="wwwroot\Uploads\Books\35ce256b-5c7d-4436-9fe6-b0a1b6797224_20250330_003015.jpeg" />
+    <None Include="wwwroot\Uploads\Books\35d94f42-bef6-47a9-89eb-d87eca39b546_20250329_235934.jpeg" />
+    <None Include="wwwroot\Uploads\Books\36f62803-4021-45b3-a10e-061bb78610ba_20250330_001851.jpeg" />
+    <None Include="wwwroot\Uploads\Books\37e1b6dd-3596-460b-a5ea-75ab35e76de2_20250329_235640.jpeg" />
+    <None Include="wwwroot\Uploads\Books\39d16c53-2473-4438-a9cc-2242e4bfe65a_20250622_191331.jpg" />
+    <None Include="wwwroot\Uploads\Books\3a8d1678-e9ab-46ce-8fe6-c60069445751_20250330_003206.png" />
+    <None Include="wwwroot\Uploads\Books\3caaf35d-06cc-45cd-910c-6930f0b8be72_20250622_200104.jpg" />
+    <None Include="wwwroot\Uploads\Books\3d3e4b70-925b-42e4-98ef-42a94c5ae486_20250330_001224.jpeg" />
+    <None Include="wwwroot\Uploads\Books\3f4c9d5d-cb93-4666-a473-9add1d838181_20250622_200112.jpg" />
+    <None Include="wwwroot\Uploads\Books\3f907f78-cd85-443b-82a3-d2663bbf74cd_20250330_001723.jpeg" />
+    <None Include="wwwroot\Uploads\Books\4375faff-2083-449b-a270-67b515001c28_20250330_004256.png" />
+    <None Include="wwwroot\Uploads\Books\43a59792-8a96-4427-9279-3ce690141ea6_20250622_151519.jpg" />
+    <None Include="wwwroot\Uploads\Books\46ce4b1e-404e-4aac-8b35-856c527a26b4_20250329_234649.jpeg" />
+    <None Include="wwwroot\Uploads\Books\472104fd-a07c-4b6d-833a-f1980ade7088_20250329_234953.jpeg" />
+    <None Include="wwwroot\Uploads\Books\47fecf3c-29cc-4de0-8ea4-8f31fabf237b_20250622_195804.jpg" />
+    <None Include="wwwroot\Uploads\Books\4b8da56f-7688-4d5b-b07e-d9853db96d1b_20250329_235845.jpeg" />
+    <None Include="wwwroot\Uploads\Books\51365b8e-cc1f-483c-812a-be9443ba16e6_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\522e0416-43c6-4d7c-a4cd-456d601be560_20250622_191310.jpg" />
+    <None Include="wwwroot\Uploads\Books\525d8112-10af-4739-9421-e78bb92755e8_20250622_150102.jpg" />
+    <None Include="wwwroot\Uploads\Books\52825395-52a2-4bea-9ee4-67a28f2c38b2_20250330_000508.jpeg" />
+    <None Include="wwwroot\Uploads\Books\595d9b87-1100-4528-ad51-601b4c266b94_20250622_142640.jpg" />
+    <None Include="wwwroot\Uploads\Books\5b2c0142-74e5-4317-a9fb-dacaa00f2610_20250330_000111.jpeg" />
+    <None Include="wwwroot\Uploads\Books\5d2c3943-cf4a-4207-9138-26bd51e01818_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\5de8b2ec-4651-4b86-a50c-0352b2ceba84_20250330_003310.jpeg" />
+    <None Include="wwwroot\Uploads\Books\5fd61fc7-4a57-4cec-bc1e-153df1b8d08b_20250330_000750.jpeg" />
+    <None Include="wwwroot\Uploads\Books\6393e19e-6166-4db4-a076-976352f7e20d_20250330_002637.jpeg" />
+    <None Include="wwwroot\Uploads\Books\648bce39-1d44-4328-8ef0-ed6094996361_20250620_004706.jpg" />
+    <None Include="wwwroot\Uploads\Books\64c09a04-9217-42ca-ad17-0bbfb092bcef_20250330_004303.png" />
+    <None Include="wwwroot\Uploads\Books\6b0b4488-cd84-4c51-8d89-ef7bde5d171b_20250622_195745.jpg" />
+    <None Include="wwwroot\Uploads\Books\6bda1890-8333-4bc8-b11e-afad13fa8249_20250330_003809.jpeg" />
+    <None Include="wwwroot\Uploads\Books\7147db03-a13b-4773-bfd3-d80fe01c4743_20250330_001923.png" />
+    <None Include="wwwroot\Uploads\Books\7186fad6-481e-4b35-8730-bb5b38fe44d0_20250330_000006.jpeg" />
+    <None Include="wwwroot\Uploads\Books\736b93b7-c2b4-4acb-8093-811eda2a1347_20250330_003204.png" />
+    <None Include="wwwroot\Uploads\Books\75eaa5a8-101b-4649-b94a-cc975b6b71d3_20250330_001300.jpeg" />
+    <None Include="wwwroot\Uploads\Books\7c3a4e7b-8291-411c-9273-b1859de50883_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\7d195219-1d98-477a-9b98-d30bae0b3464_20250330_002011.jpeg" />
+    <None Include="wwwroot\Uploads\Books\7f59fdf5-ead6-45c2-9a2b-e6b591880d3e_20250330_004149.jpeg" />
+    <None Include="wwwroot\Uploads\Books\833159e9-6e5f-4f2f-9433-27f2367f1121_20250622_151458.jpg" />
+    <None Include="wwwroot\Uploads\Books\87fa4072-3d14-44bc-8684-1891044ee516_20250330_002537.jpeg" />
+    <None Include="wwwroot\Uploads\Books\8d61c410-9ddf-45c7-9fe6-1d2bb0ae9287_20250328_145917.png" />
+    <None Include="wwwroot\Uploads\Books\8ebd06eb-523a-4675-b69d-6ecc2d9c6a26_20250622_151414.jpg" />
+    <None Include="wwwroot\Uploads\Books\8ed4d4a2-6ade-4eba-a3ee-c9760a2757d9_20250330_003206.png" />
+    <None Include="wwwroot\Uploads\Books\901cf09a-e4bf-4058-bf59-5a7b110304dd_20250622_195755.jpg" />
+    <None Include="wwwroot\Uploads\Books\9088a6fa-cc39-4361-9453-d23af93230e4_20250622_142822.jpg" />
+    <None Include="wwwroot\Uploads\Books\91fcf1af-bbaa-4e7a-8b97-5aa641a6ca3a_20250622_195738.jpg" />
+    <None Include="wwwroot\Uploads\Books\92f4d782-5a65-4bfb-bfb6-44ab253dc6c2_20250622_151439.jpg" />
+    <None Include="wwwroot\Uploads\Books\93e160f6-53a0-43c6-b70e-b5bf34a40d1d_20250330_000313.jpeg" />
+    <None Include="wwwroot\Uploads\Books\93f8b16a-cd2d-4eeb-b324-dcab684ee76c_20250622_145928.jpg" />
+    <None Include="wwwroot\Uploads\Books\964ce0aa-15b1-4d12-aee8-192f844cef48_20250622_195711.jpg" />
+    <None Include="wwwroot\Uploads\Books\9a27aa06-3690-466e-ace4-361f716d0af5_20250622_194927.jpg" />
+    <None Include="wwwroot\Uploads\Books\9a851eac-82a2-44cb-b865-bdbd243d7ccb_20250622_200052.jpg" />
+    <None Include="wwwroot\Uploads\Books\9c0c9758-ef83-4eab-9abb-0a7d1c222c86_20250622_150404.jpg" />
+    <None Include="wwwroot\Uploads\Books\a079349e-4d11-4521-b07e-8d315b13527f_20250330_003502.jpeg" />
+    <None Include="wwwroot\Uploads\Books\a0c5a78b-4b87-4b06-a325-b540229089dc_20250622_195440.jpg" />
+    <None Include="wwwroot\Uploads\Books\a26c1840-336e-4111-a9b6-1992fda7e5ca_20250329_235800.jpeg" />
+    <None Include="wwwroot\Uploads\Books\a4b33812-f128-41ef-bd29-bc204fbd1f7e_20250622_151244.jpg" />
+    <None Include="wwwroot\Uploads\Books\ac5dceb7-753b-4064-9f6e-6cc45176ffb2_20250330_000713.jpeg" />
+    <None Include="wwwroot\Uploads\Books\acbae6c0-0c0d-44c3-8f99-4ff327c81005_20250330_003245.jpeg" />
+    <None Include="wwwroot\Uploads\Books\b1f5b2da-1307-47ba-8ea1-fdbe780bd088_20250330_002539.jpeg" />
+    <None Include="wwwroot\Uploads\Books\b5d07a17-b507-4aca-ae02-67407a95e307_20250330_000437.jpeg" />
+    <None Include="wwwroot\Uploads\Books\b838a44a-4ecb-41b1-9fbe-b3216639f2b5_20250622_150024.jpg" />
+    <None Include="wwwroot\Uploads\Books\bbc43e3c-beff-4517-a107-e3ad3b7c3fbb_20250330_002428.png" />
+    <None Include="wwwroot\Uploads\Books\bede7e69-7331-4a70-ab2b-0af6442a8965_20250622_191343.jpg" />
+    <None Include="wwwroot\Uploads\Books\bf91150a-782e-45b3-a3a1-a0a119b7986c_20250622_150146.jpg" />
+    <None Include="wwwroot\Uploads\Books\c14ad657-c986-44c1-ae6b-2bacc1b2b577_20250330_001551.jpeg" />
+    <None Include="wwwroot\Uploads\Books\c324dd59-ad73-4c4d-91ff-4ec1fd12dc00_20250622_194840.jpg" />
+    <None Include="wwwroot\Uploads\Books\c3902039-c0cb-4827-93c2-e523bfbca2e8_20250330_001629.png" />
+    <None Include="wwwroot\Uploads\Books\c508f639-13fb-425e-8e56-508c3fc2ba6b_20250330_002117.jpeg" />
+    <None Include="wwwroot\Uploads\Books\c5fc5bee-ea8c-40a9-99c2-936cfa5d041d_20250330_002809.jpeg" />
+    <None Include="wwwroot\Uploads\Books\c6b34e07-de1d-44ee-8d45-390ae71affbb_20250330_004115.jpeg" />
+    <None Include="wwwroot\Uploads\Books\c70e070d-1a1f-499c-9b66-9373873efd4d_20250330_001755.png" />
+    <None Include="wwwroot\Uploads\Books\c75396e8-8da4-4ba1-b644-7a6c6b64e1ce_20250330_004229.jpeg" />
+    <None Include="wwwroot\Uploads\Books\c77cc79e-9e1b-4d65-8c9d-4ba5a67c9c95_20250329_235349.jpeg" />
+    <None Include="wwwroot\Uploads\Books\c7e1dd58-9374-4f52-aa6a-cd32d1ed4b23_20250622_194939.jpg" />
+    <None Include="wwwroot\Uploads\Books\c868a4d7-68a0-4125-b3ae-df2940c3593f_20250620_225734.jpeg" />
+    <None Include="wwwroot\Uploads\Books\cc13cb81-2752-4b7b-86eb-714d11997a08_20250330_003203.png" />
+    <None Include="wwwroot\Uploads\Books\cc4b5787-7574-45b2-8d71-06dd0658d491_20250330_004355.jpeg" />
+    <None Include="wwwroot\Uploads\Books\cdb6b6a0-dfc6-4f79-b81f-d53cbd47f797_20250329_234920.jpeg" />
+    <None Include="wwwroot\Uploads\Books\d186ff78-3d18-4e09-aeca-06b535dd8788_20250622_150324.jpg" />
+    <None Include="wwwroot\Uploads\Books\d7f01374-6dff-4ea2-8d22-afd607cbdc11_20250330_000838.jpeg" />
+    <None Include="wwwroot\Uploads\Books\d9c5e425-7c93-40b5-81a5-51cef435cbea_20250622_191258.jpeg" />
+    <None Include="wwwroot\Uploads\Books\dd6f7131-7453-4b86-b869-d996c928d7cb_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\ddde898a-001c-406b-a022-d739209c07a4_20250330_004002.jpeg" />
+    <None Include="wwwroot\Uploads\Books\ddfb6c14-a1f1-4685-a835-16afd6354aac_20250330_002323.jpeg" />
+    <None Include="wwwroot\Uploads\Books\e04d7e36-db71-4341-91ee-4d4b219dc6d0_20250622_142737.jpg" />
+    <None Include="wwwroot\Uploads\Books\e0cce661-7e81-4718-972f-a5c3ca3e2b0a_20250622_194900.jpg" />
+    <None Include="wwwroot\Uploads\Books\e5ba1036-fa70-4fb2-b647-b4897e63962f_20250330_000909.jpeg" />
+    <None Include="wwwroot\Uploads\Books\e728da97-bb73-43b1-bd16-0d971c3ab0a5_20250622_195423.jpg" />
+    <None Include="wwwroot\Uploads\Books\e8b354e3-7ce0-4824-a92d-6cd434ef30cb_20250329_235623.jpeg" />
+    <None Include="wwwroot\Uploads\Books\eaeefb94-29ae-486b-baba-078d7ca17429_20250330_001647.jpeg" />
+    <None Include="wwwroot\Uploads\Books\eb9f4fa1-8c77-41ac-917b-b94aa96b4eed_20250622_200042.jpg" />
+    <None Include="wwwroot\Uploads\Books\ec03a3c1-b718-407b-9465-f8e867353021_20250330_000242.jpeg" />
+    <None Include="wwwroot\Uploads\Books\ee60663d-c0fd-4a74-874a-2c70733e0f9a_20250330_003916.jpeg" />
+    <None Include="wwwroot\Uploads\Books\ee95d5b3-0f36-4b89-9035-9972ff1538d1_20250622_151606.jpg" />
+    <None Include="wwwroot\Uploads\Books\eea4aa7e-c852-46ca-9320-c2413be5836a_20250329_235249.jpeg" />
+    <None Include="wwwroot\Uploads\Books\efa32420-7a7e-465e-8c45-df22a52896e3_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\f0e19d8b-bc7a-4630-9f96-0cb3b943bcab_20250330_002206.jpeg" />
+    <None Include="wwwroot\Uploads\Books\f4ccd86d-1468-48f3-b3ea-e74bcca5d62b_20250330_003205.png" />
+    <None Include="wwwroot\Uploads\Books\f8237660-039b-4459-bba6-4394d70adad4_20250330_003642.jpeg" />
+    <None Include="wwwroot\Uploads\Books\f836d794-7e69-4cbe-bf21-cda6d4bd56d3_20250622_151536.jpg" />
+    <None Include="wwwroot\Uploads\Books\f845f829-8491-4d04-8358-0d9064c7ec90_20250329_235131.jpeg" />
+    <None Include="wwwroot\Uploads\Books\f967b576-dd73-48ec-9162-950caa88d10a_20250330_003606.jpeg" />
+    <None Include="wwwroot\Uploads\Books\fb89b2db-af67-44f2-835c-22c0e349d131_20250330_003722.png" />
+    <None Include="wwwroot\Uploads\Books\fc07fb03-8fe4-45f6-a4ff-d27b4c870506_20250622_195431.jpg" />
+    <None Include="wwwroot\Uploads\Categories\1eec63ec-0a41-4ef0-bbf1-49b89f3382c9_20250621_125028.jpeg" />
+    <None Include="wwwroot\Uploads\Categories\2642d0bf-2911-4dc3-86fa-b7c570b3640a_20250621_124730.jpeg" />
+    <None Include="wwwroot\Uploads\Categories\2cc19244-e7bc-42ba-b36b-4d529bedd6ac_20250619_000033.jpg" />
+    <None Include="wwwroot\Uploads\Categories\3d719ead-fbda-4d30-acab-41a101f97ed5_20250621_124830.jpeg" />
+    <None Include="wwwroot\Uploads\Categories\5e09b139-8b4b-4534-aa8a-e4ceba1b2c87_20250528_220812.jpg" />
+    <None Include="wwwroot\Uploads\Categories\70fbc35c-1cd3-4426-9cd2-7d3b4053cca7_20250528_222622.png" />
+    <None Include="wwwroot\Uploads\Categories\a0752d92-3129-4d32-b8d3-57b4d2264006_20250619_000047.webp" />
+    <None Include="wwwroot\Uploads\Categories\cca0b6e6-a553-4503-8d0b-e94fe9701708_20250331_200702.png" />
+    <None Include="wwwroot\Uploads\Categories\ce4fc7d3-c040-4d2a-a574-9bcc763269a9_20250621_115825.jpeg" />
+    <None Include="wwwroot\Uploads\Categories\da9fe4a3-7960-4372-8ecc-f42a3e53d83c_20250330_011527.jpeg" />
+    <None Include="wwwroot\Uploads\Categories\f12c18fc-96b5-42b8-acb0-4729630785a8_20250528_221701.png" />
+    <None Include="wwwroot\Uploads\Categories\f5c0821a-1dac-4f8b-b67b-58db2275d32b_20250528_221143.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LMS.Application\LMS.Application.csproj" />
+    <ProjectReference Include="..\LMS.Infrastructure\LMS.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

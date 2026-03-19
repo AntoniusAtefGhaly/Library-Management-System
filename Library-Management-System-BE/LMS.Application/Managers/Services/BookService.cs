@@ -1,0 +1,403 @@
+using LMS.Application.Dtos;
+using LMS.Application.Dtos.Book;
+using LMS.Application.Shared.Models;
+
+using LMS.Domain.Entities;
+using LMS.Domain.Interfaces.Repositories;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System.Drawing;
+namespace LMS.Application;
+
+public class BookService : IBookService
+{
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IHelperService _helperService;
+    private readonly ICurrentUserService _currentUserService;
+
+    public BookService(
+        IUnitOfWork unitOfWork,
+        IHelperService helperService,
+        ICurrentUserService currentUserService)
+    {
+        _unitOfWork = unitOfWork;
+        _helperService = helperService;
+        _currentUserService = currentUserService;
+
+    }
+    public async Task<ApiResult<List<BookWithDetailsDto>>> getAllBooksWithAuthorandCategory()
+    {
+        try
+        {
+            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { 
+                Title = b.Title, 
+                Description = b.Description, 
+                PublicationYear = b.PublicationYear, 
+                AvailableCopies = b.AvailableCopies, 
+                TotalCopies = b.TotalCopies, 
+                Category = b.Category.Name, 
+                Author = b.Author.FullName,
+                HasAvailableCopies = b.AvailableCopies > 0
+            }).ToList();
+            return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = true, Data = booksWithDetails };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
+    {
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        using (var package = new ExcelPackage())
+        {
+            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { Title = b.Title, Description = b.Description, PublicationYear = b.PublicationYear, AvailableCopies = b.AvailableCopies, TotalCopies = b.TotalCopies, Category = b.Category.Name, Author = b.Author.FullName }).ToList();
+            var stream = new MemoryStream();
+            var BooksSheet = package.Workbook.Worksheets.Add("Books");
+            BooksSheet.Row(1).Height = 35;
+            BooksSheet.Row(1).Style.Locked = true;
+            // Unlock all cells
+            BooksSheet.Cells.Style.Locked = false;
+            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
+            // Protect the sheet
+            BooksSheet.Protection.IsProtected = true;
+            BooksSheet.Protection.SetPassword("54321");
+            BooksSheet.Protection.AllowSelectLockedCells = true;
+            BooksSheet.Protection.AllowSelectUnlockedCells = true;
+            BooksSheet.Columns[1, 10].Width = 20;
+            BooksSheet.Row(1).Style.Font.Size = 15;
+            BooksSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+            BooksSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
+            BooksSheet.Row(1).Style.Font.Bold = true;
+            // set columns headers
+            for (int i = 0; i < selectedFilters.Count; i++)
+            {
+                BooksSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
+            }
+            // set Book Records
+            var row = 2;
+            List<string> list = new List<string>();
+            for (int b = 0; b < booksWithDetails?.Count(); b++)
+            {
+                for (int i = 0; i < selectedFilters.Count; i++)
+                {
+
+                    var bookType = booksWithDetails[b].GetType();
+                    var property = bookType.GetProperty(selectedFilters[i].name);
+                    if (property != null) BooksSheet.Cells[row, i + 1].Value = property.GetValue(booksWithDetails[b]);
+                }
+                row++;
+            }
+            // Auto-fit columns
+            BooksSheet.Cells.AutoFitColumns();
+            return package.GetAsByteArray();
+        }
+    }
+    public async Task<ApiResult<List<GetBookDto>>> GetAllBooksAsync()
+    {
+        try
+        {
+            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthor();
+            var bookList = books.Select(b => new GetBookDto
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Description = b.Description,
+                AuthorName = b.Author.FullName,
+                PublicationYear = b.PublicationYear,
+                AvailableCopies = b.AvailableCopies,
+                TotalCopies = b.TotalCopies,
+                CategoryId = b.CategoryId,
+                ImageUrl = b.ImageUrl,
+                authorId = b.AuthorId,
+                HasAvailableCopies = b.AvailableCopies > 0
+            }).ToList();
+
+            return new ApiResult<List<GetBookDto>> { IsSuccess = true, Data = bookList };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int? categoryId, int? authorId)
+    {
+        try
+        {
+            pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
+            var pagedResult = await _unitOfWork.BookRepository.
+                GetBooksPaged(first, rows, sortOrder, sortField, Search, categoryId, authorId);
+            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto()
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Description = b.Description,
+                CoverImageUrl = b.ImageUrl,
+                AuthorId = b.Author.Id,
+                AuthorFullName = b.Author.FullName,
+                AuthorImage = b.Author.ImageUrl,
+                AvailableCopies = b.AvailableCopies,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name,
+                PublicationYear = b.PublicationYear,
+                TotalCopies = b.TotalCopies,
+                IsTrending = b.IsTrending,
+                HasAvailableCopies = b.AvailableCopies > 0
+            }).ToList();
+            pagedResultDto.TotalCount = pagedResult.TotalCount;
+            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<ApiResult<BookDetailsDto>> getBookDetailsById(int id)
+    {
+        try
+        {
+            var book = await _unitOfWork.BookRepository.getBookDetailsById(id);
+            if (book == null)
+            {
+                return new ApiResult<BookDetailsDto>() { IsSuccess = false, Message = $"Not found any book by this Id {id}" };
+            }
+
+            // Check if the current user has any active transactions for this book
+            bool IsBorrowed = false;
+            if (_currentUserService.UserId != null)
+            {
+                var userId = int.Parse(_currentUserService.UserId);
+                IsBorrowed = await _unitOfWork.TransactionRepository.AnyAsync(t =>
+                                        t.UserId == userId &&
+                                        t.BookId == id &&
+                                        t.Status == TransactionStatus.Returned.ToString());
+
+            }
+
+            return new ApiResult<BookDetailsDto>()
+            {
+                IsSuccess = true,
+                Data = new BookDetailsDto()
+                {
+                    Title = book.Title,
+                    Description = book.Description,
+                    ImageUrl = book.ImageUrl,
+                    PublicationYear = book.PublicationYear,
+                    AvailableCopies = book.AvailableCopies,
+                    TotalCopies = book.TotalCopies,
+                    IsBorrowed = IsBorrowed,
+                    HasAvailableCopies = book.AvailableCopies > 0,
+                    AuthorFullName = book.Author.FullName,
+                    AuthorDescription = book.Author.Description,
+                    AuthorImageUrl = book.Author.ImageUrl,
+                    AuthorDateOfBirth = book.Author.DateOfBirth,
+                    CategoryName = book.Category.Name,
+                    CategoryDescription = book.Category.Description,
+                    CategoryImageUrl = book.Category.ImageUrl
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<BookDetailsDto>() { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> GetBookByIdAsync(int id)
+    {
+        try
+        {
+            var book = await _unitOfWork.BookRepository.GetBookWithAuthorByIdAsync(id);
+            if (book == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
+
+            // Check if the current user has any active transactions for this book
+            bool IsBorrowed = false;
+            if (_currentUserService.UserId != null)
+            {
+                var userId = int.Parse(_currentUserService.UserId);
+                var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
+                IsBorrowed = transactions.Any(t =>
+                    t.UserId == userId &&
+                    t.BookId == id &&
+                    (t.Status == TransactionStatus.Issued.ToString() ||
+                     t.Status == TransactionStatus.Overdue.ToString()));
+            }
+
+            return new ApiResult
+            {
+                IsSuccess = true,
+                Data = new GetBookDto
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Description = book.Description,
+                    AuthorName = book.Author.FullName,
+                    PublicationYear = book.PublicationYear,
+                    AvailableCopies = book.AvailableCopies,
+                    TotalCopies = book.TotalCopies,
+                    CategoryId = book.CategoryId,
+                    ImageUrl = book.ImageUrl,
+                    IsBorrowed = IsBorrowed,
+                    HasAvailableCopies = book.AvailableCopies > 0
+                }
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+    public async Task<ApiResult> AddBookAsync(AddBookDto request, HttpContext httpContext)
+    {
+        try
+        {
+            var book = new Book
+            {
+                Title = request.Title,
+                Description = request.Description,
+                AuthorId = request.AuthorId,
+                PublicationYear = request.PublicationYear,
+                AvailableCopies = request.AvailableCopies,
+                TotalCopies = request.TotalCopies,
+                CategoryId = request.CategoryId,
+                InsertedUserId = _currentUserService.UserId,
+                InsertedTime = DateTime.Now
+            };
+            if (request.ImageUrl is not null)
+            {
+                book.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext);
+            }
+
+            await _unitOfWork.BookRepository.AddAsync(book);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Book created successfully", Data = book };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> UpdateBookAsync(UpdateBookDto request, HttpContext httpContext)
+    {
+        try
+        {
+            var book = await _unitOfWork.BookRepository.GetByIdAsync(request.Id);
+            if (book == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
+
+            book.Title = request.Title ?? book.Title;
+            book.Description = request.Description ?? book.Description;
+            book.AuthorId = request.AuthorId;
+            book.PublicationYear = request.PublicationYear;
+            book.AvailableCopies = request.AvailableCopies;
+            book.TotalCopies = request.TotalCopies;
+            book.CategoryId = request.CategoryId;
+            book.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : book.ImageUrl;
+            book.UpdateUserId = _currentUserService.UserId;
+            book.UpdateTime = DateTime.Now;
+
+            _unitOfWork.BookRepository.Update(book);
+            await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = "Book updated successfully", Data = book };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> DeleteBookAsync(int bookId)
+    {
+        try
+        {
+            var book = await _unitOfWork.BookRepository.GetByIdAsync(bookId);
+            if (book == null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
+
+            await _unitOfWork.BookRepository.DeleteAsync(book, _currentUserService.UserId!);
+            return new ApiResult { IsSuccess = true, Message = "Book marked as deleted" };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult { IsSuccess = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ApiResult> ActivateOrDeactivateBookAsync(int id)
+    {
+        try
+        {
+
+            var book = await _unitOfWork.BookRepository.GetByIdAsync(id);
+            if (book is null)
+            {
+                return new ApiResult { IsSuccess = false, Message = "Book not found" };
+            }
+
+            book.ActivationTime = DateTime.Now;
+            book.IsActive = !book.IsActive;
+
+
+            _unitOfWork.BookRepository.Update(book);
+            var result = await _unitOfWork.SaveChangesAsync();
+            return new ApiResult { IsSuccess = true, Message = $"Book {(book.IsActive ? "activated" : "deactivated")} successfully", };
+
+        }
+        catch (Exception e)
+        {
+            return new ApiResult { IsSuccess = false, Message = e.Message };
+        }
+    }
+
+    public async Task<ApiResult<List<GetBookDto>>> GetBooksByCategoryExceptBookAsync(int bookId)
+    {
+        try
+        {
+            var books = await _unitOfWork.BookRepository.GetBooksByCategoryExceptBookAsync(bookId);
+
+            var bookList = books.Select(b => new GetBookDto
+            {
+                Id = b.Id,
+                Title = b.Title,
+                Description = b.Description,
+                AuthorName = b.Author.FullName,
+                PublicationYear = b.PublicationYear,
+                AvailableCopies = b.AvailableCopies,
+                TotalCopies = b.TotalCopies,
+                CategoryId = b.CategoryId,
+                CategoryName = b.Category.Name ?? "No Category",
+                ImageUrl = b.ImageUrl,
+                authorId = b.AuthorId,
+                HasAvailableCopies = b.AvailableCopies > 0
+            }).ToList();
+
+            return new ApiResult<List<GetBookDto>>
+            {
+                IsSuccess = true,
+                Data = bookList,
+                Message = bookList.Any() ? "Related books found" : "No related books found in this category"
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ApiResult<List<GetBookDto>>
+            {
+                IsSuccess = false,
+                Message = $"Error retrieving books: {ex.Message}"
+            };
+        }
+    }
+}

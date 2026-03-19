@@ -1,0 +1,8 @@
+﻿C:\Repos\Angular\Library-Management-System-Back\LMS.Infrastructure\Data\Context\LMSDbContext.cs(272,24): error CS0246: The type or namespace name 'ISharedColumns' could not be found (are you missing a using directive or an assembly reference?) [C:\Repos\Angular\Library-Management-System-Back\LMS.Infrastructure\LMS.Infrastructure.csproj]
+C:\Repos\Angular\Library-Management-System-Back\LMS.Infrastructure\Data\Context\LMSDbContext.cs(283,62): error CS0103: The name 'ISharedColumns' does not exist in the current context [C:\Repos\Angular\Library-Management-System-Back\LMS.Infrastructure\LMS.Infrastructure.csproj]
+
+Build FAILED.
+    22 Warning(s)
+    2 Error(s)
+
+Time Elapsed 00:00:03.16
