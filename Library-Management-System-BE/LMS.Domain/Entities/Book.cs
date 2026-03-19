@@ -1,5 +1,5 @@
-using LMS.Domain.Interfaces;
 using LMS.Domain.Common;
+using LMS.Domain.Interfaces;
 using LMS.Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -14,6 +14,7 @@ namespace LMS.Domain.Entities
         public string Title { get; set; } = null!;
 
         public ISBN ISBN { get; set; } = null!;
+
 
         [Required]
         public int AuthorId { get; set; }

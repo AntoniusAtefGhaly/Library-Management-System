@@ -105,7 +105,7 @@ public class TransactionService : ITransactionService
         {
             var transaction = new Transaction
             {
-                Id = Guid.NewGuid(),
+
                 UserId = request.UserId,
                 BookId = request.BookId,
                 IssueDate = request.IssueDate,
@@ -274,7 +274,6 @@ public class TransactionService : ITransactionService
             // Create new transaction
             var transaction = new Transaction
             {
-                Id = Guid.NewGuid(),
                 UserId = userId,
                 BookId = request.BookId,
                 BorrowDays = request.BorrowDays,

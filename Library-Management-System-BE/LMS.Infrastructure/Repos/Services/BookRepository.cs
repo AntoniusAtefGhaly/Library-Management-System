@@ -82,20 +82,6 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
                 .Select(i => i.CategoryId)
                 .FirstOrDefault()
                 && b.Id != bookId)
-            .Select(b => new Book
-            {
-                Id = b.Id,
-                Title = b.Title,
-                Description = b.Description,
-                Author = new Author { FullName = b.Author.FullName },
-                PublicationYear = b.PublicationYear,
-                AvailableCopies = b.AvailableCopies,
-                TotalCopies = b.TotalCopies,
-                CategoryId = b.CategoryId,
-                Category = new Category { Name = b.Category.Name },
-                ImageUrl = b.ImageUrl,
-                AuthorId = b.AuthorId
-            })
             .AsNoTracking()
             .ToListAsync();
     }

@@ -4,7 +4,7 @@ using LMS.Application.Services;
 using LMS.Domain.Entities;
 using LMS.Domain.Interfaces.Repositories;
 using LMS.Infrastructure;
-using LMS.Infrastructure.Repos.Services;
+using LMS.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -148,11 +148,11 @@ try
         {
             var userManager = services.GetRequiredService<UserManager<User>>();
             var unitOfWork = services.GetRequiredService<IUnitOfWork>();
-            //await DbSeeder.SeedAdminAsync(userManager);
-            //  await DbSeeder.SeedLibrarianAsync(userManager);
-            // await DbSeeder.SeedMembersAsync(userManager);
-            //await DbSeeder.SeedTransactionsAsync(unitOfWork); //one time run don't unComment
-            // await DbSeeder.SeedUsersWithTransactionsAsync(userManager, unitOfWork,10);  //one time run don't unComment
+            await DbSeeder.SeedAdminAsync(userManager);
+            await DbSeeder.SeedLibrarianAsync(userManager);
+            await DbSeeder.SeedMembersAsync(userManager);
+            await DbSeeder.SeedTransactionsAsync(unitOfWork); //one time run don't unComment
+             await DbSeeder.SeedUsersWithTransactionsAsync(userManager, unitOfWork,10);  //one time run don't unComment
         }
         catch (Exception ex)
         {

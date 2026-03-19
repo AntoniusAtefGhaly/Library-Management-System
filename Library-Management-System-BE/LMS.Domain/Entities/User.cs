@@ -1,8 +1,8 @@
+using LMS.Domain.Common;
+using LMS.Domain.Interfaces;
+using LMS.Domain.ValueObjects;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using LMS.Domain.Interfaces;
-using LMS.Domain.Common;
-using LMS.Domain.ValueObjects;
 
 namespace LMS.Domain.Entities
 {
@@ -16,7 +16,7 @@ namespace LMS.Domain.Entities
         [Required]
         [MaxLength(100)]
         public string LastName { get; set; } = null!;
-        public string? Address { get; set; }
+        public Address Address { get; set; } = null!; // Added Address property
         public DateTime? DateOfBirth { get; set; }
 
         [Url]

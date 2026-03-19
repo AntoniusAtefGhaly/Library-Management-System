@@ -8,7 +8,9 @@ namespace LMS.Domain.Entities
 {
     public class Transaction : AggregateRoot<Guid>, ISharedColumns
     {
-
+        public Transaction() { 
+        Id = Guid.NewGuid();
+        }
         [Required]
         public int UserId { get; set; }
 

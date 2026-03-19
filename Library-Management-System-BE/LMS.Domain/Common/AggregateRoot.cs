@@ -6,7 +6,7 @@ namespace LMS.Domain.Common
 
     public abstract class AggregateRoot<TId> : IAggregateRoot
     {
-        public TId Id { get;  set; } = default!;
+        public TId Id { get;protected  set; } = default!;
 
         private readonly List<IDomainEvent> _domainEvents = new();
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();

@@ -31,7 +31,7 @@ namespace LMS.Infrastructure.Repos.Services
         }
         public async Task<IEnumerable<Author>> GetAllAuthors()
         {
-            return await _context.Authors.Where(a => a.IsActive).Select(a => new Author { Id = a.Id, FullName = a.FullName }).ToListAsync();
+            return await _context.Authors.Where(a => a.IsActive).ToListAsync();
         }
         public async Task<pagedResult<Author>> GetAllAuthors(int first, int rows, int sortOrder = 1, string? sortField = null, string? search = null, bool? isActive = null)
         {
