@@ -6,9 +6,9 @@ using LMS.Application.Shared.Models;
 using LMS.Domain.Entities;
 using LMS.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System.Drawing;
+
+
+
 namespace LMS.Application;
 
 public class CategoryService : ICategoryService
@@ -16,12 +16,13 @@ public class CategoryService : ICategoryService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHelperService _helperService;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IReportService _reportService;
 
     public CategoryService(
         IUnitOfWork unitOfWork,
         IHelperService helperService,
-        ICurrentUserService currentUserService)
-    {
+        ICurrentUserService currentUserService, IReportService reportService) {
+        _reportService = reportService;
         _unitOfWork = unitOfWork;
         _helperService = helperService;
         _currentUserService = currentUserService;
@@ -53,48 +54,7 @@ public class CategoryService : ICategoryService
             return new ApiResult<List<GetCategoryDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<byte[]> ExportToExcel()
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        using (var package = new ExcelPackage())
-        {
-            var categories = await _unitOfWork.CategoryRepository.GetAllAsync();
-            List<Category> categoryList = categories.ToList();
-            var stream = new MemoryStream();
-            var categoriesSheet = package.Workbook.Worksheets.Add("categories");
-            categoriesSheet.Row(1).Height = 35;
-            categoriesSheet.Row(1).Style.Locked = true;
-            // Unlock all cells
-            categoriesSheet.Cells.Style.Locked = false;
-            categoriesSheet.Cells[1, 1, 1,2].Style.Locked = true;
-            // Protect the sheet
-            categoriesSheet.Protection.IsProtected = true;
-            categoriesSheet.Protection.SetPassword("54321");
-            categoriesSheet.Protection.AllowSelectLockedCells = true;
-            categoriesSheet.Protection.AllowSelectUnlockedCells = true;
-            categoriesSheet.Columns[1, 10].Width = 20;
-            categoriesSheet.Row(1).Style.Font.Size = 15;
-            categoriesSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            categoriesSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            categoriesSheet.Cells[1, 1, 1,2].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            categoriesSheet.Cells[1, 1, 1, 2].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
-            categoriesSheet.Row(1).Style.Font.Bold = true;
-            // set columns headers           
-            categoriesSheet.Cells[1,1].Value = "Name";
-            categoriesSheet.Cells[1, 2].Value = "Description";
-            // set Book Records
-            var row = 2;
-            for (int c = 0; c < categoryList.Count(); c++)
-            {             
-                categoriesSheet.Cells[row, 1].Value = categoryList[c].Name;
-                categoriesSheet.Cells[row, 2].Value = categoryList[c].Description;
-                row++;
-            }
-            // Auto-fit columns
-            categoriesSheet.Cells.AutoFitColumns();
-            return package.GetAsByteArray();
-        }
-    }
+    public async Task<byte[]> ExportToExcel() { return await _reportService.ExportCategoriesAsync(); }
     public async Task<ApiResult> GetCategoryByIdAsync(int id)
     {
         try
@@ -134,7 +94,7 @@ public class CategoryService : ICategoryService
             };
             if (request.ImageUrl is not null)
             {
-                category.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Categories", httpContext);
+                category.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Categories");
             }
 
             await _unitOfWork.CategoryRepository.AddAsync(category);
@@ -157,7 +117,7 @@ public class CategoryService : ICategoryService
 
             category.Name = request.Name ?? category.Name;
             category.Description = request.Description ?? category.Description;
-            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Categories", httpContext) : category.ImageUrl;
+            category.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Categories") : category.ImageUrl;
             category.UpdateTime = DateTime.Now;
             category.UpdateUserId = _currentUserService.UserId;
 

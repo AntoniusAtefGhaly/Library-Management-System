@@ -2,6 +2,7 @@
 using LMS.Application.Dtos;
 using LMS.Application.Dtos.User;
 using LMS.Application.Shared.Models;
+using LMS.Domain.Entities;
 using LMS.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

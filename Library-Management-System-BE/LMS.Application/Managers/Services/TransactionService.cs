@@ -4,9 +4,9 @@ using LMS.Application.Managers.Interfaces;
 using LMS.Application.Shared.Models;
 using LMS.Domain.Entities;
 using LMS.Domain.Interfaces.Repositories;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System.Drawing;
+
+
+
 namespace LMS.Application;
 
 public class TransactionService : ITransactionService
@@ -15,18 +15,20 @@ public class TransactionService : ITransactionService
     private readonly ITrendingBooksService _trendingBooksService;
     private readonly ICurrentUserService _currentUserService;
     private readonly IEmailService _emailService;
+    private readonly IReportService _reportService;
 
 
     public TransactionService(
         IUnitOfWork unitOfWork,
         ITrendingBooksService trendingBooksService,
         ICurrentUserService currentUserService,
-        IEmailService emailService)
+        IEmailService emailService, IReportService reportService)
     {
         _unitOfWork = unitOfWork;
         _trendingBooksService = trendingBooksService;
         _currentUserService = currentUserService;
         _emailService = emailService;
+        _reportService = reportService;
     }
 
     public async Task<ApiResult> GetAllTransactionsAsync()
@@ -57,56 +59,7 @@ public class TransactionService : ITransactionService
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        using (var package = new ExcelPackage())
-        {
-            var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
-            List<TransactionExcellData> TransactionExcellDataList = transactions.Select(t => new TransactionExcellData() { Book = t.Book?.Title, User = string.Concat(t.User?.FirstName, t.User?.LastName), RequestDate = t.RequestDate.ToString("d"), IssueDate = t.IssueDate?.ToString("d"), DueDate = t.DueDate?.ToString("d"), ReturnDate = t.ReturnDate?.ToString("d"), Status = t.Status, IssuedByUser = string.Concat(t.IssuedByUser?.FirstName, t.IssuedByUser?.LastName), ReturnedByUser = string.Concat(t.ReturnedByUser?.FirstName, t.ReturnedByUser?.LastName), }).ToList();
-            var stream = new MemoryStream();
-            var UsersSheet = package.Workbook.Worksheets.Add("Books");
-            UsersSheet.Row(1).Height = 35;
-            UsersSheet.Row(1).Style.Locked = true;
-            // Unlock all cells
-            UsersSheet.Cells.Style.Locked = false;
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
-            // Protect the sheet
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
-            UsersSheet.Protection.IsProtected = true;
-            UsersSheet.Protection.SetPassword("54321");
-            UsersSheet.Protection.AllowSelectLockedCells = true;
-            UsersSheet.Protection.AllowSelectUnlockedCells = true;
-            UsersSheet.Columns[1, 10].Width = 20;
-            UsersSheet.Row(1).Style.Font.Size = 15;
-            UsersSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            UsersSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
-            UsersSheet.Row(1).Style.Font.Bold = true;
-            // set columns headers
-            for (int i = 0; i < selectedFilters.Count; i++)
-            {
-                UsersSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
-            }
-            // set transactions Records
-            var row = 2;
-            for (int b = 0; b < TransactionExcellDataList?.Count(); b++)
-            {
-                for (int i = 0; i < selectedFilters.Count; i++)
-                {
-
-                    var bookType = TransactionExcellDataList[b].GetType();
-                    var property = bookType.GetProperty(selectedFilters[i].name);
-                    if (property != null) UsersSheet.Cells[row, i + 1].Value = property.GetValue(TransactionExcellDataList[b]);
-                }
-                row++;
-            }
-            // Auto-fit columns
-            UsersSheet.Cells.AutoFitColumns();
-            return package.GetAsByteArray();
-        }
-    }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters) { return await _reportService.ExportTransactionsAsync(selectedFilters); }
     public async Task<ApiResult> GetTransactionByIdAsync(string id)
     {
         try
@@ -460,72 +413,7 @@ public class TransactionService : ITransactionService
 
     public async Task<byte[]> GenerateTransactionReportAsync(TransactionReportDto request)
     {
-        // Set the license context for EPPlus 8+
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-
-        var transactions = await _unitOfWork.TransactionRepository.GetAllAsync();
-        var filteredTransactions = transactions
-            .Where(t => t.IssueDate >= request.StartDate && t.IssueDate <= request.EndDate)
-            .OrderBy(t => t.Book?.Title)
-            .ThenBy(t => $"{t.User?.FirstName} {t.User?.LastName}")
-            .ToList();
-
-        using var package = new ExcelPackage();
-        var worksheet = package.Workbook.Worksheets.Add("Transactions");
-
-        // Add headers
-        worksheet.Cells[1, 1].Value = "Transaction ID";
-        worksheet.Cells[1, 2].Value = "Book Title";
-        worksheet.Cells[1, 3].Value = "User Name";
-        worksheet.Cells[1, 4].Value = "Issue Date";
-        worksheet.Cells[1, 5].Value = "Due Date";
-        worksheet.Cells[1, 6].Value = "Return Date";
-        worksheet.Cells[1, 7].Value = "Status";
-
-        // Style the header row
-        using (var range = worksheet.Cells[1, 1, 1, 7])
-        {
-            range.Style.Font.Bold = true;
-            range.Style.Fill.PatternType = ExcelFillStyle.Solid;
-            range.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
-        }
-
-        // Add transaction data
-        int row = 2;
-        foreach (var transaction in filteredTransactions)
-        {
-            var cell = worksheet.Cells[row, 1, row, 7];
-
-            // Check if transaction is overdue
-            bool isOverdue = transaction.Status == TransactionStatus.Overdue.ToString();
-
-            if (isOverdue)
-            {
-                cell.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                cell.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightPink);
-                cell.Style.Font.Color.SetColor(System.Drawing.Color.Red);
-            }
-
-            worksheet.Cells[row, 1].Value = transaction.Id;
-            worksheet.Cells[row, 2].Value = transaction.Book?.Title;
-            worksheet.Cells[row, 3].Value = $"{transaction.User?.FirstName} {transaction.User?.LastName}";
-            worksheet.Cells[row, 4].Value = transaction.IssueDate;
-            worksheet.Cells[row, 5].Value = transaction.DueDate;
-            worksheet.Cells[row, 6].Value = transaction.ReturnDate;
-            worksheet.Cells[row, 7].Value = transaction.Status;
-
-            // Format date columns
-            worksheet.Cells[row, 4].Style.Numberformat.Format = "yyyy-mm-dd";
-            worksheet.Cells[row, 5].Style.Numberformat.Format = "yyyy-mm-dd";
-            worksheet.Cells[row, 6].Style.Numberformat.Format = "yyyy-mm-dd";
-
-            row++;
-        }
-
-        // Auto-fit columns
-        worksheet.Cells.AutoFitColumns();
-
-        return package.GetAsByteArray();
+        return await _reportService.GenerateTransactionReportAsync(request);
     }
 
     public async Task<int> SendOverdueNotificationsAsync()

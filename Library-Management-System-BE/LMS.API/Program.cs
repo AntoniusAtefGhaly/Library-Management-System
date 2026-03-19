@@ -1,7 +1,10 @@
 using Hangfire;
 using LMS.Application;
 using LMS.Application.Services;
+using LMS.Domain.Entities;
+using LMS.Domain.Interfaces.Repositories;
 using LMS.Infrastructure;
+using LMS.Infrastructure.Repos.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -70,10 +73,8 @@ try
 
     builder.Services.AddApplication();
     builder.Services.AddInfrastructure();
-    builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IBookService, BookService>();
     builder.Services.AddScoped<ITransactionService, TransactionService>();
-    builder.Services.AddScoped<IReportService, ReportService>();
     builder.Services.AddScoped<IDashboardService, DashboardService>();
     // Register background service
     // builder.Services.AddHostedService<OverdueNotificationBackgroundService>();

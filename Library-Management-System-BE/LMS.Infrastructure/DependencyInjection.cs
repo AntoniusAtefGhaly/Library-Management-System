@@ -1,6 +1,9 @@
 using LMS.Domain.Interfaces.Repositories;
 using LMS.Infrastructure.Repos.Services;
 using Microsoft.Extensions.DependencyInjection;
+using LMS.Application.Managers.Interfaces;
+using LMS.Infrastructure.Services;
+using LMS.Application;
 
 namespace LMS.Infrastructure;
 
@@ -17,6 +20,12 @@ public static class DependencyInjection
 
         // Register Unit of Work
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<IHelperService, HelperService>();
+
+        services.AddScoped<IEmailService, EmailService>();
+
+        services.AddScoped<IReportService, ReportService>();
 
         return services;
     }

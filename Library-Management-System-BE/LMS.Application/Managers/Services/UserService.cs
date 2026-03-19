@@ -7,9 +7,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System.Drawing;
+
+
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -22,18 +22,21 @@ public class UserService : IUserService
     private readonly IConfiguration _configuration;
     private readonly UserManager<User> _manager;
     private readonly IHelperService _helperService;
+    private readonly IReportService _reportService;
     public UserService(
         IUnitOfWork unitOfWork,
         IEncryptionService encryptionService,
         IConfiguration configuration,
          UserManager<User> manager,
-         IHelperService helperService)
+         IHelperService helperService,
+         IReportService reportService)
     {
         _unitOfWork = unitOfWork;
         _encryptionService = encryptionService;
         _configuration = configuration;
         _manager = manager;
         _helperService = helperService;
+        _reportService = reportService;
     }
 
     public async Task<ApiResult> RegisterUserAsync(UserRegisterDto registerCredientials)
@@ -100,57 +103,7 @@ public class UserService : IUserService
             return new ApiResult { Message = ex.Message, IsSuccess = false, };
         }
     }
-    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        using (var package = new ExcelPackage())
-        {
-            var users = await _unitOfWork.UserRepository.GetAllAsync();
-            List<UserExcellData> userExcelDataList = users.Select(u => new UserExcellData() { FirstName = u.FirstName, LastName = u.LastName, Address = u.Address, DateOfBirth = u.DateOfBirth?.ToString("d"), Email = u.Email, PhoneNumber = u.PhoneNumber }).ToList();
-            var stream = new MemoryStream();
-            var UsersSheet = package.Workbook.Worksheets.Add("Books");
-            UsersSheet.Row(1).Height = 35;
-            UsersSheet.Row(1).Style.Locked = true;
-            // Unlock all cells
-            UsersSheet.Cells.Style.Locked = false;
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
-            // Protect the sheet
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
-            UsersSheet.Protection.IsProtected = true;
-            UsersSheet.Protection.SetPassword("54321");
-            UsersSheet.Protection.AllowSelectLockedCells = true;
-            UsersSheet.Protection.AllowSelectUnlockedCells = true;
-            UsersSheet.Columns[1, 10].Width = 20;
-            UsersSheet.Row(1).Style.Font.Size = 15;
-            UsersSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            UsersSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            UsersSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
-            UsersSheet.Row(1).Style.Font.Bold = true;
-            // set columns headers
-            for (int i = 0; i < selectedFilters.Count; i++)
-            {
-                UsersSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
-            }
-            // set Users Records
-            var row = 2;
-            List<string> list = new List<string>();
-            for (int b = 0; b < userExcelDataList?.Count(); b++)
-            {
-                for (int i = 0; i < selectedFilters.Count; i++)
-                {
-
-                    var bookType = userExcelDataList[b].GetType();
-                    var property = bookType.GetProperty(selectedFilters[i].name);
-                    if (property != null) UsersSheet.Cells[row, i + 1].Value = property.GetValue(userExcelDataList[b]);
-                }
-                row++;
-            }
-            // Auto-fit columns
-            UsersSheet.Cells.AutoFitColumns();
-            return package.GetAsByteArray();
-        }
-    }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters) { return await _reportService.ExportUsersAsync(selectedFilters); }
     public async Task<ApiResult> LoginAsync(UserLoginDto loginCredentials)
     {
         try
@@ -360,7 +313,7 @@ public class UserService : IUserService
             };
             if (userDto.ProfileImageUrl is not null)
             {
-                user.ProfileImageUrl = await _helperService.SaveFileAsync(userDto.ProfileImageUrl, "Users", httpContext);
+                user.ProfileImageUrl = await _helperService.SaveFileAsync(userDto.ProfileImageUrl, "Users");
             }
             // Save user in the repository
             await _unitOfWork.UserRepository.AddAsync(user);
@@ -447,7 +400,7 @@ public class UserService : IUserService
         user.DateOfBirth = updateUserProfile.DateOfBirth;
         if (updateUserProfile.ProfileImageUrl != null)
         {
-            user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserProfile.ProfileImageUrl, "Users", httpContext);
+            user.ProfileImageUrl = await _helperService.SaveFileAsync(updateUserProfile.ProfileImageUrl, "Users");
         }
         // If Role is provided and different, update it
         if (!string.IsNullOrWhiteSpace(updateUserProfile.Role) && user.Role != updateUserProfile.Role)
@@ -504,7 +457,7 @@ public class UserService : IUserService
             // Handle profile image if provided
             if (updateUserDetails.ProfileImage is not null)
             {
-                user.ProfileImageUrl = await _helperService.SaveFileAsync((IFormFile)updateUserDetails.ProfileImage, "Users", httpContext);
+                user.ProfileImageUrl = await _helperService.SaveFileAsync((IFormFile)updateUserDetails.ProfileImage, "Users");
             }
 
             // Update the user
@@ -552,7 +505,7 @@ public class UserService : IUserService
             // Handle profile image if provided
             if (UpdateUserDto.ProfileImageUrl is not null)
             {
-                user.ProfileImageUrl = await _helperService.SaveFileAsync(UpdateUserDto.ProfileImageUrl, "Users", httpContext);
+                user.ProfileImageUrl = await _helperService.SaveFileAsync(UpdateUserDto.ProfileImageUrl, "Users");
             }
             //update role
             var existingClaims = await _manager.GetClaimsAsync(user);

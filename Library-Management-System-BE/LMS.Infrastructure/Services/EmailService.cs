@@ -3,7 +3,7 @@ using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 
-namespace LMS.Application.Services
+namespace LMS.Infrastructure.Services
 {
     public class EmailService : IEmailService
     {

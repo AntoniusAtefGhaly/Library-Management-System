@@ -5,9 +5,9 @@ using LMS.Application.Shared.Models;
 using LMS.Domain.Entities;
 using LMS.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
-using System.Drawing;
+
+
+
 namespace LMS.Application;
 
 public class BookService : IBookService
@@ -15,12 +15,13 @@ public class BookService : IBookService
     private readonly IUnitOfWork _unitOfWork;
     private readonly IHelperService _helperService;
     private readonly ICurrentUserService _currentUserService;
+    private readonly IReportService _reportService;
 
     public BookService(
         IUnitOfWork unitOfWork,
         IHelperService helperService,
-        ICurrentUserService currentUserService)
-    {
+        ICurrentUserService currentUserService, IReportService reportService) {
+        _reportService = reportService;
         _unitOfWork = unitOfWork;
         _helperService = helperService;
         _currentUserService = currentUserService;
@@ -48,56 +49,7 @@ public class BookService : IBookService
             return new ApiResult<List<BookWithDetailsDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters)
-    {
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        using (var package = new ExcelPackage())
-        {
-            var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
-            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { Title = b.Title, Description = b.Description, PublicationYear = b.PublicationYear, AvailableCopies = b.AvailableCopies, TotalCopies = b.TotalCopies, Category = b.Category.Name, Author = b.Author.FullName }).ToList();
-            var stream = new MemoryStream();
-            var BooksSheet = package.Workbook.Worksheets.Add("Books");
-            BooksSheet.Row(1).Height = 35;
-            BooksSheet.Row(1).Style.Locked = true;
-            // Unlock all cells
-            BooksSheet.Cells.Style.Locked = false;
-            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Locked = true;
-            // Protect the sheet
-            BooksSheet.Protection.IsProtected = true;
-            BooksSheet.Protection.SetPassword("54321");
-            BooksSheet.Protection.AllowSelectLockedCells = true;
-            BooksSheet.Protection.AllowSelectUnlockedCells = true;
-            BooksSheet.Columns[1, 10].Width = 20;
-            BooksSheet.Row(1).Style.Font.Size = 15;
-            BooksSheet.Row(1).Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-            BooksSheet.Row(1).Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.PatternType = ExcelFillStyle.Solid;
-            BooksSheet.Cells[1, 1, 1, selectedFilters.Count].Style.Fill.BackgroundColor.SetColor(Color.SkyBlue);
-            BooksSheet.Row(1).Style.Font.Bold = true;
-            // set columns headers
-            for (int i = 0; i < selectedFilters.Count; i++)
-            {
-                BooksSheet.Cells[1, i + 1].Value = selectedFilters[i].name;
-            }
-            // set Book Records
-            var row = 2;
-            List<string> list = new List<string>();
-            for (int b = 0; b < booksWithDetails?.Count(); b++)
-            {
-                for (int i = 0; i < selectedFilters.Count; i++)
-                {
-
-                    var bookType = booksWithDetails[b].GetType();
-                    var property = bookType.GetProperty(selectedFilters[i].name);
-                    if (property != null) BooksSheet.Cells[row, i + 1].Value = property.GetValue(booksWithDetails[b]);
-                }
-                row++;
-            }
-            // Auto-fit columns
-            BooksSheet.Cells.AutoFitColumns();
-            return package.GetAsByteArray();
-        }
-    }
+    public async Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters) { return await _reportService.ExportBooksAsync(selectedFilters); }
     public async Task<ApiResult<List<GetBookDto>>> GetAllBooksAsync()
     {
         try
@@ -273,7 +225,7 @@ public class BookService : IBookService
             };
             if (request.ImageUrl is not null)
             {
-                book.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext);
+                book.ImageUrl = await _helperService.SaveFileAsync(request.ImageUrl, "Books");
             }
 
             await _unitOfWork.BookRepository.AddAsync(book);
@@ -303,7 +255,7 @@ public class BookService : IBookService
             book.AvailableCopies = request.AvailableCopies;
             book.TotalCopies = request.TotalCopies;
             book.CategoryId = request.CategoryId;
-            book.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books", httpContext) : book.ImageUrl;
+            book.ImageUrl = request.ImageUrl is not null ? await _helperService.SaveFileAsync(request.ImageUrl, "Books") : book.ImageUrl;
             book.UpdateUserId = _currentUserService.UserId;
             book.UpdateTime = DateTime.Now;
 

@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-namespace LMS.Application;
+using LMS.Application;
+namespace LMS.Infrastructure.Services;
 
 public class HelperService : IHelperService
 {
@@ -17,7 +18,7 @@ public class HelperService : IHelperService
 
     #region Functions
 
-    public async Task<string> SaveFileAsync(IFormFile file, string folderName, HttpContext httpContext)
+    public async Task<string> SaveFileAsync(IFormFile file, string folderName)
     {
         if (file == null || file.Length == 0)
             throw new ArgumentException("File cannot be empty");
