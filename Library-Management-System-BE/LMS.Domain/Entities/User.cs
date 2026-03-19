@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using LMS.Domain.Interfaces;
+using LMS.Domain.Common;
+using LMS.Domain.ValueObjects;
 
 namespace LMS.Domain.Entities
 {
-    public class User : IdentityUser<int>, ISharedColumns
+    public class User : IdentityUser<int>, ISharedColumns, IAggregateRoot
     {
 
         [Required]

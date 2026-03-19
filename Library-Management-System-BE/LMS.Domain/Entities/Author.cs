@@ -1,9 +1,14 @@
 using LMS.Domain.Interfaces;
+using LMS.Domain.Common;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace LMS.Domain.Entities
 {
-    public class Author : ISharedColumns
+    public class Author : AggregateRoot<int>, ISharedColumns
     {
-        public int Id { get; set; }
         public string FullName { get; set; } = null!;
         public string? Description { get; set; }
         public DateOnly DateOfBirth { get; set; }

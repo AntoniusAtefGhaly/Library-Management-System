@@ -1,4 +1,5 @@
 using LMS.Domain.Interfaces;
+using LMS.Domain.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,11 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Domain.Entities
 {
-    public class Category : ISharedColumns
+    public class Category : AggregateRoot<int>, ISharedColumns
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; } // Auto-incremented primary key
 
         [Required]
         [MaxLength(500)]

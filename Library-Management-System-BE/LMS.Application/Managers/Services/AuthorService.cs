@@ -124,7 +124,6 @@ namespace LMS.Application.Managers.Services
                 var author = await unitOfWork.AuthorRepository.GetByIdAsync(updateAuthorDto.id);
                 if (author is null)
                     return new ApiResult { IsSuccess = false, Message = $"author by {updateAuthorDto.id} not found" };
-                author.Id = updateAuthorDto.id;
                 author.FullName = updateAuthorDto.fullName;
                 author.Description = updateAuthorDto.description;
                 author.ImageUrl = updateAuthorDto.imageUrl is not null ? await _helperService.SaveFileAsync(updateAuthorDto.imageUrl, "Authors") : author.ImageUrl;

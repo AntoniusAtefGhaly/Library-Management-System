@@ -1,19 +1,19 @@
 using LMS.Domain.Interfaces;
-using LMS.Domain.Entities;
+using LMS.Domain.Common;
+using LMS.Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Domain.Entities
 {
-    public class Book : ISharedColumns
+    public class Book : AggregateRoot<int>, ISharedColumns, IAggregateRoot
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; } // Auto-incremented primary key
 
         [Required]
         [MaxLength(500)]
         public string Title { get; set; } = null!;
+
+        public ISBN ISBN { get; set; } = null!;
 
         [Required]
         public int AuthorId { get; set; }

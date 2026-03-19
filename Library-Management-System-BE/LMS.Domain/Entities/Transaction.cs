@@ -1,14 +1,13 @@
 using LMS.Domain.Interfaces;
+using LMS.Domain.Common;
+using LMS.Domain.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace LMS.Domain.Entities
 {
-    public class Transaction : ISharedColumns
+    public class Transaction : AggregateRoot<Guid>, ISharedColumns
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; } = Guid.NewGuid();
 
         [Required]
         public int UserId { get; set; }
@@ -61,6 +60,10 @@ namespace LMS.Domain.Entities
             {
                 if (value == "Pending" || value == "Issued" || value == "Returned" || value == "Overdue")
                 {
+                    if (_status != "Issued" && value == "Issued")
+                    {
+                        AddDomainEvent(new BookBorrowedEvent(Id, BookId, UserId));
+                    }
                     _status = value;
                 }
                 else
