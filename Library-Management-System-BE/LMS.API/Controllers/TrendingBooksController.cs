@@ -1,10 +1,10 @@
-﻿using LMS.Application;
+using LMS.Application;
 using LMS.Application.Dtos.Book;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/trending-books")]
 [ApiController]
 public class TrendingBooksController : ControllerBase
 {
@@ -15,14 +15,14 @@ public class TrendingBooksController : ControllerBase
         _trendingBooksService = trendingBooksService;
     }
 
-    [HttpPost("GetAllTrendingBooks/{first}/{rows}")]
-    public async Task<ActionResult> GetAllTrendingBooks(int first, int rows, BookParams bookParams)
+    [HttpGet("paged")]
+    public async Task<ActionResult> GetAllTrendingBooks([FromQuery] BookParams bookParams)
     {
-        var result = await _trendingBooksService.GetAllTrendingBooksAsync(first, rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);      
+        var result = await _trendingBooksService.GetAllTrendingBooksAsync(bookParams);      
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("SetTrendingBook/{bookId}")]
+    [HttpPost("{bookId}")]
     public async Task<IActionResult> SetTrendingBook(int bookId)
     {
         var result = await _trendingBooksService.SetTrendingBookAsync(bookId);

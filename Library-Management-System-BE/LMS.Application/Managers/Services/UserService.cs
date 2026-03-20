@@ -3,6 +3,7 @@ using LMS.Application.Dtos.User;
 using LMS.Application.Shared.Models;
 using LMS.Domain.Entities;
 using LMS.Domain.Interfaces.Repositories;
+using LMS.Domain.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -383,7 +384,7 @@ public class UserService : IUserService
         {
             return new ApiResult { IsSuccess = false, Message = $"not found user by id {id}" };
         }
-        return new ApiResult { IsSuccess = true, Data = new UserDetailsDto { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber, ProfileImageUrl = user.ProfileImageUrl, Address = user.Address, DateofBirth = user.DateOfBirth } };
+        return new ApiResult { IsSuccess = true, Data = new UserDetailsDto { Id = user.Id, FirstName = user.FirstName, LastName = user.LastName, PhoneNumber = user.PhoneNumber, ProfileImageUrl = user.ProfileImageUrl, Address = user.Address.ToString(), DateofBirth = user.DateOfBirth } };
     }
     public async Task<ApiResult> updateUserProfile(UpdateUserProfileDto updateUserProfile, HttpContext httpContext)
     {
@@ -396,7 +397,7 @@ public class UserService : IUserService
         user.FirstName = updateUserProfile.FirstName;
         user.LastName = updateUserProfile.LastName;
         user.PhoneNumber = updateUserProfile.PhoneNumber;
-        user.Address = updateUserProfile.Address;
+        user.Address =new Address( updateUserProfile.Address,"","","");
         user.DateOfBirth = updateUserProfile.DateOfBirth;
         if (updateUserProfile.ProfileImageUrl != null)
         {

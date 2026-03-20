@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/categories")]
 [ApiController]
 public class CategoryController : ControllerBase
 {
@@ -20,40 +20,40 @@ public class CategoryController : ControllerBase
     {
         _categoryService = categoryService;
     }
-    [HttpPost("{first}/{rows}")]
-    public async Task<ActionResult<ApiResult>> GettAllAuthorsPaged(int first, int rows, CategoryParams categoryParams)
+    [HttpGet("paged")]
+    public async Task<ActionResult<ApiResult>> GetAllCategoriesPaged([FromQuery] CategoryParams categoryParams)
     {
         try
         {
-            pagedResult<Category> authors = await _categoryService.GetAllCategoriesAsync(first, rows, categoryParams);
-            return Ok(new ApiResult { IsSuccess = true, Data = authors });
+            pagedResult<Category> categories = await _categoryService.GetAllCategoriesAsync(categoryParams);
+            return Ok(new ApiResult { IsSuccess = true, Data = categories });
         }
         catch (Exception ex)
         {
             return new ApiResult { IsSuccess = false, Message = ex.Message };
         }
     }
-    [HttpGet("GetAllCategories")]
+    [HttpGet]
     public async Task<IActionResult> GetAllCategories()
     {
         ApiResult<List<GetCategoryDto>> result = await _categoryService.GetAllCategoriesAsync();    
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("GetCategoryById/{id}")]
+    [HttpGet("{id}")]
     public async Task<IActionResult> GetCategoryById(int id)
     {
         var result = await _categoryService.GetCategoryByIdAsync(id);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("AddCategory")]
+    [HttpPost]
     public async Task<IActionResult> AddCategory([FromForm] AddCategoryDto request)
     {
         var result = await _categoryService.AddCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpGet("ExportToExcel")]
+    [HttpGet("export-excel")]
     public async Task<ActionResult> ExportToExcel()
     {
         try
@@ -67,21 +67,21 @@ public class CategoryController : ControllerBase
         }
     }
 
-    [HttpPut("UpdateCategory")]
+    [HttpPut]
     public async Task<IActionResult> UpdateCategory([FromForm] UpdateCategoryDto request)
     {
         var result = await _categoryService.UpdateCategoryAsync(request, HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpDelete("DeleteCategory/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
         var result = await _categoryService.DeleteCategoryAsync(id);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("ActivateOrDeactivateCategory/{id}")]
+    [HttpPut("{id}/toggle-status")]
     public async Task<IActionResult> ActivateOrDeactivateCategory(int id)
     {
         var result = await _categoryService.ActivateOrDeactivateCategoryAsync(id);

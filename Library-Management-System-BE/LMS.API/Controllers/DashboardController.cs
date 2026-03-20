@@ -18,7 +18,7 @@ namespace LMS.API.Controllers
             _dashboardService = dashboardService;
         }
 
-        [HttpGet("getDashboardData")]
+        [HttpGet]
         public async Task<ActionResult<DashboardDto>> GetDashboardData([FromQuery] int? count = 5)
         {
             var result = await _dashboardService.GetDashboardAsync(count ?? 5);

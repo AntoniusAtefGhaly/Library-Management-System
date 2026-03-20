@@ -28,9 +28,9 @@ public class CategoryService : ICategoryService
         _currentUserService = currentUserService;
 
     }
-    public async Task<pagedResult<Category>> GetAllCategoriesAsync(int first, int rows, CategoryParams CategoryParams)
+    public async Task<pagedResult<Category>> GetAllCategoriesAsync(CategoryParams categoryParams)
     {
-        return await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(first, rows, CategoryParams.sortOrder, CategoryParams.sortField, CategoryParams.Search, CategoryParams.isActive); 
+        return await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(categoryParams.first, categoryParams.rows, categoryParams.sortOrder, categoryParams.sortField, categoryParams.Search, categoryParams.isActive); 
     }
     public async Task<ApiResult<List<GetCategoryDto>>> GetAllCategoriesAsync()
     {

@@ -15,5 +15,5 @@ public interface ICategoryService
     Task<ApiResult> DeleteCategoryAsync(int id);
     Task<ApiResult> ActivateOrDeactivateCategoryAsync(int id);
     Task<byte[]> ExportToExcel();
-    Task<pagedResult<Category>> GetAllCategoriesAsync(int first, int rows, CategoryParams CategoryParams);
+    Task<pagedResult<Category>> GetAllCategoriesAsync(CategoryParams categoryParams);
 }

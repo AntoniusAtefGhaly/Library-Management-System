@@ -13,7 +13,7 @@ namespace LMS.Application.Managers.Interfaces
     public interface IAuthorService
     {
         Task<IEnumerable<ReadAuthorDto>> GetAllAuthors();
-        Task<pagedResult<GetAuthorDto>> GetAllAuthors(int first,int rows,AuthorParams authorParams);
+        Task<pagedResult<GetAuthorDto>> GetAllAuthors(AuthorParams authorParams);
         Task<int> DeleteAuthorById(int id, string userId);
         Task<bool> checkAuthorHasBook(int id);
         Task<ReadAuthorDto?> GetAuthorById(int id);

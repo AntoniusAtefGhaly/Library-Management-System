@@ -13,9 +13,6 @@ namespace LMS.Domain.Entities
         [MaxLength(500)]
         public string Title { get; set; } = null!;
 
-        public ISBN ISBN { get; set; } = null!;
-
-
         [Required]
         public int AuthorId { get; set; }
         [Url]

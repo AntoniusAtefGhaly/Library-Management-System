@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/authors")]
     [ApiController]
     public class AuthorController : ControllerBase
     {
@@ -29,12 +29,12 @@ namespace LMS.API.Controllers
                 return new ApiResult { IsSuccess = false, Message = ex.Message };
             }
         }
-        [HttpPost("{first}/{rows}")]
-        public async Task<ActionResult<ApiResult>> GettAllAuthorsPaged(int first, int rows, AuthorParams authorParams)
+        [HttpGet("paged")]
+        public async Task<ActionResult<ApiResult>> GetAllAuthorsPaged([FromQuery] AuthorParams authorParams)
         {
             try
             {
-                pagedResult<GetAuthorDto> authors = await _authorService.GetAllAuthors(first, rows, authorParams);
+                pagedResult<GetAuthorDto> authors = await _authorService.GetAllAuthors(authorParams);
                 return Ok(new ApiResult { IsSuccess = true, Data = authors });
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace LMS.API.Controllers
                 return BadRequest(new ApiResult { IsSuccess = false, Message = ex.Message });
             }
         }
-        [HttpGet("ExportToExcel")]
+        [HttpGet("export-excel")]
         public async Task<ActionResult> ExportToExcel()
         {
             try
@@ -86,7 +86,7 @@ namespace LMS.API.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
-        [HttpPut("ActivateOrDeactivateAuthor/{id}")]
+        [HttpPut("{id}/toggle-status")]
         public async Task<IActionResult> ActivateOrDeactivateAuthor(int id)
         {
             var result = await _authorService.ActivateOrDeactivateAuthor(id);

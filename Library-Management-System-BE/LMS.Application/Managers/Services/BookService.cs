@@ -77,13 +77,13 @@ public class BookService : IBookService
             return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(int first, int rows, int sortOrder, string? sortField, string? Search, int? categoryId, int? authorId)
+    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(BookParams bookParams)
     {
         try
         {
             pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
             var pagedResult = await _unitOfWork.BookRepository.
-                GetBooksPaged(first, rows, sortOrder, sortField, Search, categoryId, authorId);
+                GetBooksPaged(bookParams.first, bookParams.rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
             pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto()
             {
                 Id = b.Id,

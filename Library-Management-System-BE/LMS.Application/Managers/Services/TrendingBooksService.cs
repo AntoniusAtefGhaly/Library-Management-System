@@ -1,5 +1,6 @@
 using LMS.Application.Shared.Models;
 
+using LMS.Application.Dtos.Book;
 using LMS.Domain.Entities;
 using LMS.Domain.Interfaces.Repositories;
 namespace LMS.Application;
@@ -13,7 +14,7 @@ public class TrendingBooksService : ITrendingBooksService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ApiResult<pagedResult<GetBookDto>>> GetAllTrendingBooksAsync(int first, int rows, int sortOrder, string? sortField, string? Search, int? categoryId, int? authorId)
+    public async Task<ApiResult<pagedResult<GetBookDto>>> GetAllTrendingBooksAsync(BookParams bookParams)
     {
         try
         {
@@ -33,39 +34,39 @@ public class TrendingBooksService : ITrendingBooksService
             }
 
             // Apply search filter
-            if (!string.IsNullOrEmpty(Search))
+            if (!string.IsNullOrEmpty(bookParams.Search))
             {
                 trendingbooks = trendingbooks.Where(b => 
-                    b.Title.Contains(Search, StringComparison.OrdinalIgnoreCase) || 
-                    (b.Description != null && b.Description.Contains(Search, StringComparison.OrdinalIgnoreCase)) ||
-                    b.Author.FullName.Contains(Search, StringComparison.OrdinalIgnoreCase)
+                    b.Title.Contains(bookParams.Search, StringComparison.OrdinalIgnoreCase) || 
+                    (b.Description != null && b.Description.Contains(bookParams.Search, StringComparison.OrdinalIgnoreCase)) ||
+                    b.Author.FullName.Contains(bookParams.Search, StringComparison.OrdinalIgnoreCase)
                 ).ToList();
             }
 
             // Apply category filter
-            if (categoryId.HasValue)
+            if (bookParams.categoryId.HasValue)
             {
-                trendingbooks = trendingbooks.Where(b => b.CategoryId == categoryId.Value).ToList();
+                trendingbooks = trendingbooks.Where(b => b.CategoryId == bookParams.categoryId.Value).ToList();
             }
 
             // Apply author filter
-            if (authorId.HasValue)
+            if (bookParams.authorId.HasValue)
             {
-                trendingbooks = trendingbooks.Where(b => b.AuthorId == authorId.Value).ToList();
+                trendingbooks = trendingbooks.Where(b => b.AuthorId == bookParams.authorId.Value).ToList();
             }
 
             // Apply sorting
-            if (!string.IsNullOrEmpty(sortField))
+            if (!string.IsNullOrEmpty(bookParams.sortField))
             {
-                trendingbooks = sortField.ToLower() switch
+                trendingbooks = bookParams.sortField.ToLower() switch
                 {
-                    "title" => sortOrder == 1 ? 
+                    "title" => bookParams.sortOrder == 1 ? 
                         trendingbooks.OrderBy(b => b.Title).ToList() : 
                         trendingbooks.OrderByDescending(b => b.Title).ToList(),
-                    "publicationyear" => sortOrder == 1 ? 
+                    "publicationyear" => bookParams.sortOrder == 1 ? 
                         trendingbooks.OrderBy(b => b.PublicationYear).ToList() : 
                         trendingbooks.OrderByDescending(b => b.PublicationYear).ToList(),
-                    "author" => sortOrder == 1 ? 
+                    "author" => bookParams.sortOrder == 1 ? 
                         trendingbooks.OrderBy(b => b.Author.FullName).ToList() : 
                         trendingbooks.OrderByDescending(b => b.Author.FullName).ToList(),
                     _ => trendingbooks
@@ -88,7 +89,7 @@ public class TrendingBooksService : ITrendingBooksService
             }).ToList();
 
             var totalcount = bookList.Count;
-            bookList = bookList.Skip(first).Take(rows).ToList();
+            bookList = bookList.Skip(bookParams.first).Take(bookParams.rows).ToList();
 
             pagedResultDto.Result = bookList;
             pagedResultDto.TotalCount = totalcount;

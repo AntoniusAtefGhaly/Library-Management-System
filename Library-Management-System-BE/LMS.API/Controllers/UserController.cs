@@ -1,4 +1,4 @@
-﻿using LMS.Application;
+using LMS.Application;
 using LMS.Application.Dtos;
 using LMS.Application.Dtos.User;
 using LMS.Application.Shared.Models;
@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/users")]
 [ApiController]
 public class UserController : ControllerBase
 {
@@ -23,14 +23,14 @@ public class UserController : ControllerBase
         userManager = _userManager;
     }
 
-    [HttpPost("Login")]
+    [HttpPost("login")]
     [AllowAnonymous]
     public async Task<IActionResult> Login(UserLoginDto loginCredentials)
     {
         var result = await _userService.LoginAsync(loginCredentials);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpPost("changePassword")]
+    [HttpPost("change-password")]
     [Authorize]
     public async Task<ActionResult> changePassword(ChangePasswordDto changePasswordDto)
     {
@@ -47,7 +47,7 @@ public class UserController : ControllerBase
         return BadRequest();
 
     }
-    [HttpPost("Register")]
+    [HttpPost("register")]
     [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto registerCredentials)
     {
@@ -55,7 +55,7 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("GetAllUsers")]
+    [HttpGet]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllUsers()
     {
@@ -63,7 +63,7 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("GetAllRoles")]
+    [HttpGet("roles")]
 
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllRoles()
@@ -72,15 +72,15 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("AddRoleToUser")]
+    [HttpPost("roles")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddRoleToUser([FromBody] UserRoleDto request)
     {
         var result = await _userService.AddRoleToUserAsync(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpPost("ExportToExcel")]
-    public async Task<ActionResult> ExportToExcel(List<SelectedFilters> selectedFilters)
+    [HttpGet("export-excel")]
+    public async Task<ActionResult> ExportToExcel([FromQuery] List<SelectedFilters> selectedFilters)
     {
         try
         {
@@ -92,7 +92,7 @@ public class UserController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-    [HttpPost("RemoveRoleFromUser")]
+    [HttpDelete("roles")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> RemoveRoleFromUser([FromBody] UserRoleDto request)
     {
@@ -100,7 +100,7 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("ActivateDeactivateUser")]
+    [HttpPost("toggle-activation")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ToggleUserActivation([FromBody] ToggleUserActivationDto request)
     {
@@ -108,14 +108,14 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("AddUserWithDefaultPassword")]
+    [HttpPost("add-user")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddUser([FromForm] AddUserDto request)
     {
         var result = await _userService.AddUserAsync(request,HttpContext);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpGet("GetCurrentUserDetails")]
+    [HttpGet("me")]
     [Authorize]
     public async Task<ActionResult> GetUserById()
     {
@@ -140,7 +140,7 @@ public class UserController : ControllerBase
 
     }
 
-    [HttpGet("GetAllUsersByRole/{role}")]
+    [HttpGet("role/{role}")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetAllUsersByRole(string role)
     {
@@ -148,7 +148,7 @@ public class UserController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("Profile")]
+    [HttpPut("profile")]
     [Authorize]
     public async Task<IActionResult> UpdateUserDetails([FromForm] UpdateUserDetailsDto updateUserDetails)
     {

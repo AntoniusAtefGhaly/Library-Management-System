@@ -38,9 +38,9 @@ namespace LMS.Application.Managers.Services
         {
             return await unitOfWork.AuthorRepository.checkAuthorHasBook(id);
         }
-        public async Task<pagedResult<GetAuthorDto>> GetAllAuthors(int first, int rows, AuthorParams authorParams)
+        public async Task<pagedResult<GetAuthorDto>> GetAllAuthors(AuthorParams authorParams)
         {
-            var authors = await unitOfWork.AuthorRepository.GetAllAuthors(first,rows,authorParams.sortOrder,authorParams.sortField,authorParams.Search,authorParams.isActive);
+            var authors = await unitOfWork.AuthorRepository.GetAllAuthors(authorParams.first,authorParams.rows,authorParams.sortOrder,authorParams.sortField,authorParams.Search,true);
             var authorIds = authors.Result.Select(a => a.Id).ToList();
             var books = await unitOfWork.BookRepository.GetBooksByAuthorIds(authorIds);
             return new pagedResult<GetAuthorDto> {

@@ -107,16 +107,7 @@ public class LMSDbContext : IdentityDbContext<User, IdentityRole<int>, int>
             );
         #endregion
 
-        modelBuilder.Entity<Book>(entity =>
-        {
-            entity.OwnsOne(b => b.ISBN, isbn =>
-            {
-                isbn.Property(i => i.Value)
-                    .HasColumnName("ISBN")
-                    .IsRequired();
-            });
-        });
-
+ 
         modelBuilder.Entity<User>(entity =>
         {
             entity.OwnsOne(u => u.Address, a =>

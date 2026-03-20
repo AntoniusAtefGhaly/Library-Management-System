@@ -1,4 +1,4 @@
-﻿using LMS.Application;
+using LMS.Application;
 using LMS.Application.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,7 @@ using Hangfire;
 
 namespace LMS.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/transactions")]
 [ApiController]
 public class TransactionController : ControllerBase
 {
@@ -22,21 +22,21 @@ public class TransactionController : ControllerBase
         _backgroundJobClient = backgroundJobClient;
     }
 
-    [HttpGet("GetAllTransactions")]
+    [HttpGet]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetAllTransactions()
     {
         var result = await _transactionService.GetAllTransactionsAsync();
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpPost("IssueBook")]
+    [HttpPost("issue")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> IssueBook(IssueBookDto request)
     {
         var result = await _transactionService.IssueBookAsync(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpPost("ReturnBook")]
+    [HttpPost("return")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> ReturnBook(ReturnBookDto request)
     {
@@ -44,7 +44,7 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("GetTransactionById/{id}")]
+    [HttpGet("{id}")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetTransactionById(string id)
     {
@@ -52,7 +52,7 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("AddTransaction")]
+    [HttpPost]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> AddTransaction(AddTransactionDto request)
     {
@@ -60,14 +60,14 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPut("UpdateTransaction")]
+    [HttpPut]
     public async Task<IActionResult> UpdateTransaction(UpdateTransactionDto request)
     {
         var result = await _transactionService.UpdateTransactionAsync(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpPost("ExportToExcel")]
-    public async Task<ActionResult> ExportToExcel(List<SelectedFilters> selectedFilters)
+    [HttpGet("export-excel")]
+    public async Task<ActionResult> ExportToExcel([FromQuery] List<SelectedFilters> selectedFilters)
     {
         try
         {
@@ -79,14 +79,14 @@ public class TransactionController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-    [HttpDelete("DeleteTransaction/{id}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTransaction(string id)
     {
         var result = await _transactionService.DeleteTransactionAsync(id);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("GetTransactionsByUserId/{userId}")]
+    [HttpGet("user/{userId}")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> GetTransactionsByUserId(int userId)
     {
@@ -94,7 +94,7 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("MyBorrowHistory")]
+    [HttpGet("me")]
     [Authorize]
     public async Task<ActionResult<ApiResult>> GetCurrentUserTransactions()
     {
@@ -102,7 +102,7 @@ public class TransactionController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("BorrowBook")]
+    [HttpPost("borrow")]
     [Authorize]
     public async Task<ActionResult<ApiResult>> BorrowBook(BorrowBookDto request)
     {
@@ -110,7 +110,7 @@ public class TransactionController : ControllerBase
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("SendOverdueNotifications")]
+    [HttpPost("notifications/overdue")]
     [Authorize(Roles = "Admin")]
     public IActionResult SendOverdueNotifications()
     {
@@ -118,7 +118,7 @@ public class TransactionController : ControllerBase
         return Ok(new ApiResult { IsSuccess = true, Message = "Overdue notifications job has been successfully queued." });
     }
 
-    [HttpPost("send-issued-book-reminder/{transactionId}")]
+    [HttpPost("notifications/issue-reminder/{transactionId}")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> SendIssuedBookReminders(string transactionId)
     {
@@ -126,7 +126,7 @@ public class TransactionController : ControllerBase
         return Ok(new ApiResult { IsSuccess = true, Message = $"Issued book reminder sent: {sent}" });
     }
 
-    [HttpPut("ChangeStatus")]
+    [HttpPut("status")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<ActionResult<ApiResult>> ChangeTransactionStatus(ChangeTransactionStatusDto request)
     {

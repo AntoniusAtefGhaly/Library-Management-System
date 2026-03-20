@@ -1,11 +1,11 @@
-﻿using LMS.Application;
+using LMS.Application;
 using LMS.Application.Shared.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LMS.API.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/feedbacks")]
 [ApiController]
 public class FeedbackController : ControllerBase
 {
@@ -16,20 +16,20 @@ public class FeedbackController : ControllerBase
         _feedbackService = feedbackService;
     }
 
-    [HttpGet("GetAllFeedbacks")]
+    [HttpGet]
     public async Task<IActionResult> GetAllFeedbacks()
     {
         var result = await _feedbackService.GetAllFeedbacksAsync();
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
-    [HttpGet("GetAllFeedbacksByBookId/{bookId}")]
+    [HttpGet("book/{bookId}")]
     public async Task<IActionResult> GetAllFeedbacksByBookId(int bookId)
     {
         var result = await _feedbackService.GetAllFeedbacksByBookIdAsync(bookId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpPost("AddFeedback")]
+    [HttpPost]
     [Authorize]
     public async Task<IActionResult> AddFeedback(AddFeedbackDto request)
     {

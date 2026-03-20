@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LMS.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/reports")]
 public class ReportsController : ControllerBase
 {
     private readonly IReportService _reportService;
@@ -17,7 +17,7 @@ public class ReportsController : ControllerBase
         _reportService = reportService;
     }
 
-    [HttpGet("DownloadTransactionReport")]
+    [HttpGet("transactions")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> DownloadTransactionReport([FromQuery] TransactionReportDto request)
     {
@@ -43,7 +43,7 @@ public class ReportsController : ControllerBase
         }
     }
 
-    [HttpGet("DownloadUserReport")]
+    [HttpGet("users")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> DownloadUserReport([FromQuery] UserReportRequest request)
     {
@@ -69,7 +69,7 @@ public class ReportsController : ControllerBase
         }
     }
 
-    [HttpGet("DownloadUserBorrowingHistory")]
+    [HttpGet("users/borrowing-history")]
     [Authorize(Roles = "Admin,Librarian")]
     public async Task<IActionResult> DownloadUserBorrowingHistory([FromQuery] UserBorrowingHistoryRequest request)
     {
