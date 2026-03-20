@@ -30,7 +30,7 @@ public class CategoryService : ICategoryService
     }
     public async Task<pagedResult<Category>> GetAllCategoriesAsync(CategoryParams categoryParams)
     {
-        return await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(categoryParams.first, categoryParams.rows, categoryParams.sortOrder, categoryParams.sortField, categoryParams.Search, categoryParams.isActive); 
+        return await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(categoryParams.pageNumber, categoryParams.pageSize, categoryParams.sortOrder, categoryParams.sortField, categoryParams.Search, categoryParams.isActive); 
     }
     public async Task<ApiResult<List<GetCategoryDto>>> GetAllCategoriesAsync()
     {

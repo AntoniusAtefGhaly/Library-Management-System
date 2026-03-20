@@ -40,7 +40,7 @@ namespace LMS.Application.Managers.Services
         }
         public async Task<pagedResult<GetAuthorDto>> GetAllAuthors(AuthorParams authorParams)
         {
-            var authors = await unitOfWork.AuthorRepository.GetAllAuthors(authorParams.first,authorParams.rows,authorParams.sortOrder,authorParams.sortField,authorParams.Search,true);
+            var authors = await unitOfWork.AuthorRepository.GetAllAuthors(authorParams.pageNumber,authorParams.pageSize,authorParams.sortOrder,authorParams.sortField,authorParams.Search,true);
             var authorIds = authors.Result.Select(a => a.Id).ToList();
             var books = await unitOfWork.BookRepository.GetBooksByAuthorIds(authorIds);
             return new pagedResult<GetAuthorDto> {

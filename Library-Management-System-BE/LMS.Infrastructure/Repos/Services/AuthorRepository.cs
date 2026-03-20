@@ -33,7 +33,7 @@ namespace LMS.Infrastructure.Repos.Services
         {
             return await _context.Authors.Where(a => a.IsActive).ToListAsync();
         }
-        public async Task<pagedResult<Author>> GetAllAuthors(int first, int rows, int sortOrder = 1, string? sortField = null, string? search = null, bool? isActive = null)
+        public async Task<pagedResult<Author>> GetAllAuthors(int pageNumber, int pageSize, int sortOrder = 1, string? sortField = null, string? search = null, bool? isActive = null)
         {
             pagedResult<Author> pagedResult = new pagedResult<Author>();
             var query = _context.Authors.AsQueryable();
@@ -78,7 +78,8 @@ namespace LMS.Infrastructure.Repos.Services
             {
                 pagedResult.TotalCount = _context.Authors.Count();
             }
-            pagedResult.Result = await query.Skip(first).Take(rows).ToListAsync();
+            var skip = (pageNumber - 1) * pageSize;
+            pagedResult.Result = await query.Skip(skip).Take(pageSize).ToListAsync();
             return pagedResult;
         }
 

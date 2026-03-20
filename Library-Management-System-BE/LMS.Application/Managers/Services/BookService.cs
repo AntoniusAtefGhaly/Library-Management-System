@@ -83,7 +83,7 @@ public class BookService : IBookService
         {
             pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
             var pagedResult = await _unitOfWork.BookRepository.
-                GetBooksPaged(bookParams.first, bookParams.rows, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
+                GetBooksPaged(bookParams.pageNumber, bookParams.pageSize, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
             pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto()
             {
                 Id = b.Id,

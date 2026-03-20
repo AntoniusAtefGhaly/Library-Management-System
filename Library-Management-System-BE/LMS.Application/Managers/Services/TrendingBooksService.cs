@@ -89,7 +89,7 @@ public class TrendingBooksService : ITrendingBooksService
             }).ToList();
 
             var totalcount = bookList.Count;
-            bookList = bookList.Skip(bookParams.first).Take(bookParams.rows).ToList();
+            bookList = bookList.Skip((bookParams.pageNumber - 1) * bookParams.pageSize).Take(bookParams.pageSize).ToList();
 
             pagedResultDto.Result = bookList;
             pagedResultDto.TotalCount = totalcount;

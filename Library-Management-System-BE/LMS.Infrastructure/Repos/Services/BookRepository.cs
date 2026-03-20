@@ -23,7 +23,7 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
     #endregion
 
     #region Functions
-    public async Task<pagedResult<Book>> GetBooksPaged(int first, int rows, int sortOrder = 1, string? sortField = null, string? Search = null, int? categoryId = null, int? authorId = null)
+    public async Task<pagedResult<Book>> GetBooksPaged(int pageNumber, int pageSize, int sortOrder = 1, string? sortField = null, string? Search = null, int? categoryId = null, int? authorId = null)
     {
         pagedResult<Book> pagedResult = new pagedResult<Book>();
         var query = _context.Book.Include(b => b.Author).Include(b => b.Category).AsQueryable();
@@ -57,7 +57,8 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
         pagedResult.TotalCount = query.Count();
         if (sortOrder == 1 && sortField.IsNullOrEmpty()) query = query.OrderBy(b => b.Title);
         else if (sortField.IsNullOrEmpty() && sortOrder == -1) query = query.OrderByDescending(b => b.Title);
-        pagedResult.Result = await query.Skip(first).Take(rows).ToListAsync();
+        var skip = (pageNumber - 1) * pageSize;
+        pagedResult.Result = await query.Skip(skip).Take(pageSize).ToListAsync();
         return pagedResult;
     }
     public async Task<Book?> getBookDetailsById(int id)

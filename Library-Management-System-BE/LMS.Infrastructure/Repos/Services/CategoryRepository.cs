@@ -32,7 +32,7 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
                                 .ToListAsync();
 
     }
-    public async Task<pagedResult<Category>> GetAllCategoriesAsync(int first, int rows, int sortOrder = 1, string? sortField = null, string? search = null, bool? isActive = null)
+    public async Task<pagedResult<Category>> GetAllCategoriesAsync(int pageNumber, int pageSize, int sortOrder = 1, string? sortField = null, string? search = null, bool? isActive = null)
     {
         pagedResult<Category> pagedResult = new pagedResult<Category>();
         var query = _context.Category.AsQueryable();
@@ -65,7 +65,8 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         {
             pagedResult.TotalCount = _context.Category.Count();
         }
-        pagedResult.Result = await query.Skip(first).Take(rows).ToListAsync();
+        var skip = (pageNumber - 1) * pageSize;
+        pagedResult.Result = await query.Skip(skip).Take(pageSize).ToListAsync();
         return pagedResult;
     }
     #endregion
