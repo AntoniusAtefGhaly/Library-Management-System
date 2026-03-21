@@ -1,1 +1,61 @@
-<p>author-list works!</p>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold"><i class="bi bi-people-fill me-2 text-primary"></i> Authors Library</h2>
+    <span class="badge bg-secondary">{{ totalCount }} Authors Total</span>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2 text-muted">Reading from the archives...</p>
+  </div>
+
+  <div *ngIf="!loading && authors.length === 0" class="alert alert-info text-center py-5">
+    <i class="bi bi-info-circle fs-1"></i>
+    <p class="mt-2 mb-0">No authors found. Try different search criteria.</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" *ngIf="!loading">
+    <div class="col" *ngFor="let author of authors">
+      <div class="card h-100 shadow-sm border-0 bg-light transition-hover">
+        <div class="card-body">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                 style="width: 50px; height: 50px; font-weight: bold; font-size: 1.2rem;">
+              {{ author.fullName.charAt(0) }}
+            </div>
+            <div>
+              <h5 class="card-title mb-0 fw-bold text-dark">{{ author.fullName }}</h5>
+              <small class="text-muted"><i class="bi bi-book me-1"></i> {{ author.bookCount }} Published Books</small>
+            </div>
+          </div>
+          <p class="card-text text-muted small text-truncate-2" *ngIf="author.description">
+            {{ author.description }}
+          </p>
+          <div class="mt-3 d-flex justify-content-between align-items-center">
+            <span class="badge" [ngClass]="author.isActive ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+              {{ author.isActive ? 'Active' : 'Inactive' }}
+            </span>
+            <button class="btn btn-sm btn-outline-primary rounded-pill px-3">View Details</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination Controls -->
+  <nav *ngIf="!loading && totalPages > 1" aria-label="Author pagination" class="mt-5">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <button class="page-link" (click)="goToPage(currentPage - 1)">Previous</button>
+      </li>
+      <li class="page-item" *ngFor="let page of pages" [class.active]="currentPage === page">
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <button class="page-link" (click)="goToPage(currentPage + 1)">Next</button>
+      </li>
+    </ul>
+  </nav>
+</div>
