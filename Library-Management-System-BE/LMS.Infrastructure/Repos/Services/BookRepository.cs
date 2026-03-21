@@ -54,7 +54,7 @@ public class BookRepository : GenericRepository<Book>, IBookRepository
         {
             query = query.Where(b => b.AuthorId == authorId);
         }
-        pagedResult.TotalCount = query.Count();
+        pagedResult.TotalCount = await query.CountAsync();
         if (sortOrder == 1 && sortField.IsNullOrEmpty()) query = query.OrderBy(b => b.Title);
         else if (sortField.IsNullOrEmpty() && sortOrder == -1) query = query.OrderByDescending(b => b.Title);
         var skip = (pageNumber - 1) * pageSize;

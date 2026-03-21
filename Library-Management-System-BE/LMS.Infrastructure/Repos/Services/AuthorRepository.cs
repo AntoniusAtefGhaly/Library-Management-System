@@ -37,11 +37,10 @@ namespace LMS.Infrastructure.Repos.Services
         {
             pagedResult<Author> pagedResult = new pagedResult<Author>();
             var query = _context.Authors.AsQueryable();
-            if (!search.IsNullOrEmpty())
-            {
-                query = query.Where(a => a.FullName.Contains(search) || (a.Description != null && a.Description.Contains(search)));
-                pagedResult.TotalCount = query.Count();
-            }
+        if (!search.IsNullOrEmpty())
+        {
+            query = query.Where(a => a.FullName.Contains(search) || (a.Description != null && a.Description.Contains(search)));
+        }
             if (!sortField.IsNullOrEmpty())
             {
                 switch (sortField)
@@ -69,18 +68,16 @@ namespace LMS.Infrastructure.Repos.Services
             {
                 query = sortOrder == 1 ? query.OrderBy(a => a.FullName) : query.OrderByDescending(a => a.FullName);
             }
-            if (isActive != null)
-            {
-                query = query.Where(a => a.IsActive == isActive);
-                pagedResult.TotalCount = _context.Authors.Count(a => a.IsActive == isActive);
-            }
-            if ((isActive == null) && search.IsNullOrEmpty())
-            {
-                pagedResult.TotalCount = _context.Authors.Count();
-            }
-            var skip = (pageNumber - 1) * pageSize;
-            pagedResult.Result = await query.Skip(skip).Take(pageSize).ToListAsync();
-            return pagedResult;
+        if (isActive != null)
+        {
+            query = query.Where(a => a.IsActive == isActive);
+        }
+
+        pagedResult.TotalCount = await query.CountAsync();
+
+        var skip = (pageNumber - 1) * pageSize;
+        pagedResult.Result = await query.Skip(skip).Take(pageSize).ToListAsync();
+        return pagedResult;
         }
 
 

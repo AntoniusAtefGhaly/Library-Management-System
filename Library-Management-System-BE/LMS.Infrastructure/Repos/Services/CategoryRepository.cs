@@ -39,7 +39,6 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         if (!search.IsNullOrEmpty())
         {
             query = query.Where(a =>  (!string.IsNullOrEmpty(search) &&a.Name.Contains(search)) || (!string.IsNullOrEmpty(search) && a.Description.Contains(search)));
-            pagedResult.TotalCount = query.Count();
         }
         if (!sortField.IsNullOrEmpty())
         {
@@ -59,12 +58,10 @@ public class CategoryRepository : GenericRepository<Category>, ICategoryReposito
         if (isActive != null)
         {
             query = query.Where(a => a.IsActive == isActive);
-            pagedResult.TotalCount = _context.Category.Count(a => a.IsActive == isActive);
         }
-        if ((isActive == null) && search.IsNullOrEmpty())
-        {
-            pagedResult.TotalCount = _context.Category.Count();
-        }
+
+        pagedResult.TotalCount = await query.CountAsync();
+
         var skip = (pageNumber - 1) * pageSize;
         pagedResult.Result = await query.Skip(skip).Take(pageSize).ToListAsync();
         return pagedResult;
