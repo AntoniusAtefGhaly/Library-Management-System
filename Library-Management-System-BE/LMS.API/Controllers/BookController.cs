@@ -44,7 +44,7 @@ public class BookController : ControllerBase
     [HttpGet("paged")]
     public async Task<ActionResult> GetBooksPaged([FromQuery] BookParams bookParams)
     {
-        ApiResult<pagedResult<ReadBookDto>> Books = await _bookService.GetBooksPaged(bookParams);
+        ApiPagedResult<ReadBookDto> Books = await _bookService.GetBooksPaged(bookParams);
         return Ok(Books);
     }
     [HttpGet("{id}")]

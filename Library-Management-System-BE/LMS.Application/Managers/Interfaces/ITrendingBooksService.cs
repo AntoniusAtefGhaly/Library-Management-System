@@ -7,7 +7,7 @@ namespace LMS.Application;
 public interface ITrendingBooksService
 {
 
-    Task<ApiResult<pagedResult<GetBookDto>>> GetAllTrendingBooksAsync(BookParams bookParams);
+    Task<ApiPagedResult<GetBookDto>> GetAllTrendingBooksAsync(BookParams bookParams);
 
     Task<ApiResult> SetTrendingBookAsync(int bookId);
 }

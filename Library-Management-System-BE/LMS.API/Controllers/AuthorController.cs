@@ -30,16 +30,16 @@ namespace LMS.API.Controllers
             }
         }
         [HttpGet("paged")]
-        public async Task<ActionResult<ApiResult>> GetAllAuthorsPaged([FromQuery] AuthorParams authorParams)
+        public async Task<ActionResult<ApiPagedResult<GetAuthorDto>>> GetAllAuthorsPaged([FromQuery] AuthorParams authorParams)
         {
             try
             {
-                pagedResult<GetAuthorDto> authors = await _authorService.GetAllAuthors(authorParams);
-                return Ok(new ApiResult { IsSuccess = true, Data = authors });
+                ApiPagedResult<GetAuthorDto> authors = await _authorService.GetAllAuthors(authorParams);
+                return Ok(authors);
             }
             catch (Exception ex)
             {
-                return new ApiResult { IsSuccess = false, Message = ex.Message };
+                return new ApiPagedResult<GetAuthorDto> { IsSuccess = false, Message = ex.Message };
             }
         }
         [HttpDelete("{id}")]

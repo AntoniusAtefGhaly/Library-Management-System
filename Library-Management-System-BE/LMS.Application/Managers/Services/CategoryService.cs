@@ -28,9 +28,16 @@ public class CategoryService : ICategoryService
         _currentUserService = currentUserService;
 
     }
-    public async Task<pagedResult<Category>> GetAllCategoriesAsync(CategoryParams categoryParams)
+    public async Task<ApiPagedResult<Category>> GetAllCategoriesAsync(CategoryParams categoryParams)
     {
-        return await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(categoryParams.pageNumber, categoryParams.pageSize, categoryParams.sortOrder, categoryParams.sortField, categoryParams.Search, categoryParams.isActive); 
+        var categories = await _unitOfWork.CategoryRepository.GetAllCategoriesAsync(categoryParams.pageNumber, categoryParams.pageSize, categoryParams.sortOrder, categoryParams.sortField, categoryParams.Search, categoryParams.isActive); 
+        return new ApiPagedResult<Category> {
+            IsSuccess = true,
+            TotalCount = categories.TotalCount,
+            PageNumber = categoryParams.pageNumber,
+            PageSize = categoryParams.pageSize,
+            Data = categories.Result.ToList()
+        };
     }
     public async Task<ApiResult<List<GetCategoryDto>>> GetAllCategoriesAsync()
     {

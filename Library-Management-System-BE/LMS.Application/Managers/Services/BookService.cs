@@ -77,14 +77,14 @@ public class BookService : IBookService
             return new ApiResult<List<GetBookDto>> { IsSuccess = false, Message = ex.Message };
         }
     }
-    public async Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(BookParams bookParams)
+    public async Task<ApiPagedResult<ReadBookDto>> GetBooksPaged(BookParams bookParams)
     {
         try
         {
-            pagedResult<ReadBookDto> pagedResultDto = new pagedResult<ReadBookDto>();
+            ApiPagedResult<ReadBookDto> pagedResultDto = new ApiPagedResult<ReadBookDto>();
             var pagedResult = await _unitOfWork.BookRepository.
                 GetBooksPaged(bookParams.pageNumber, bookParams.pageSize, bookParams.sortOrder, bookParams.sortField, bookParams.Search, bookParams.categoryId, bookParams.authorId);
-            pagedResultDto.Result = pagedResult.Result.Select(b => new ReadBookDto()
+            pagedResultDto.Data = pagedResult.Result.Select(b => new ReadBookDto()
             {
                 Id = b.Id,
                 Title = b.Title,
@@ -102,11 +102,14 @@ public class BookService : IBookService
                 HasAvailableCopies = b.AvailableCopies > 0
             }).ToList();
             pagedResultDto.TotalCount = pagedResult.TotalCount;
-            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = true, Data = pagedResultDto };
+            pagedResultDto.PageNumber = bookParams.pageNumber;
+            pagedResultDto.PageSize = bookParams.pageSize;
+            pagedResultDto.IsSuccess = true;
+            return pagedResultDto;
         }
         catch (Exception ex)
         {
-            return new ApiResult<pagedResult<ReadBookDto>> { IsSuccess = false, Message = ex.Message };
+            return new ApiPagedResult<ReadBookDto> { IsSuccess = false, Message = ex.Message };
         }
     }
     public async Task<ApiResult<BookDetailsDto>> getBookDetailsById(int id)

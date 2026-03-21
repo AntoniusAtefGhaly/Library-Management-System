@@ -38,14 +38,17 @@ namespace LMS.Application.Managers.Services
         {
             return await unitOfWork.AuthorRepository.checkAuthorHasBook(id);
         }
-        public async Task<pagedResult<GetAuthorDto>> GetAllAuthors(AuthorParams authorParams)
+        public async Task<ApiPagedResult<GetAuthorDto>> GetAllAuthors(AuthorParams authorParams)
         {
             var authors = await unitOfWork.AuthorRepository.GetAllAuthors(authorParams.pageNumber,authorParams.pageSize,authorParams.sortOrder,authorParams.sortField,authorParams.Search,true);
             var authorIds = authors.Result.Select(a => a.Id).ToList();
             var books = await unitOfWork.BookRepository.GetBooksByAuthorIds(authorIds);
-            return new pagedResult<GetAuthorDto> {
+            return new ApiPagedResult<GetAuthorDto> {
+                IsSuccess = true,
                 TotalCount = authors.TotalCount,
-                Result = authors.Result.Select(a => new GetAuthorDto {
+                PageNumber = authorParams.pageNumber,
+                PageSize = authorParams.pageSize,
+                Data = authors.Result.Select(a => new GetAuthorDto {
                     Id = a.Id,
                     FullName = a.FullName,
                     Description = a.Description,

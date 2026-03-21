@@ -19,5 +19,5 @@ public interface IBookService
     Task<ApiResult> ActivateOrDeactivateBookAsync(int id);
     Task<ApiResult<List<GetBookDto>>> GetBooksByCategoryExceptBookAsync(int bookId);
     Task<byte[]> ExportToExcel(List<SelectedFilters> selectedFilters);
-    Task<ApiResult<pagedResult<ReadBookDto>>> GetBooksPaged(BookParams bookParams);
+    Task<ApiPagedResult<ReadBookDto>> GetBooksPaged(BookParams bookParams);
 }

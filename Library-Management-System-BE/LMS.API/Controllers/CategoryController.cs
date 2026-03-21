@@ -21,16 +21,16 @@ public class CategoryController : ControllerBase
         _categoryService = categoryService;
     }
     [HttpGet("paged")]
-    public async Task<ActionResult<ApiResult>> GetAllCategoriesPaged([FromQuery] CategoryParams categoryParams)
+    public async Task<ActionResult<ApiPagedResult<Category>>> GetAllCategoriesPaged([FromQuery] CategoryParams categoryParams)
     {
         try
         {
-            pagedResult<Category> categories = await _categoryService.GetAllCategoriesAsync(categoryParams);
-            return Ok(new ApiResult { IsSuccess = true, Data = categories });
+            ApiPagedResult<Category> categories = await _categoryService.GetAllCategoriesAsync(categoryParams);
+            return Ok(categories);
         }
         catch (Exception ex)
         {
-            return new ApiResult { IsSuccess = false, Message = ex.Message };
+            return new ApiPagedResult<Category> { IsSuccess = false, Message = ex.Message };
         }
     }
     [HttpGet]

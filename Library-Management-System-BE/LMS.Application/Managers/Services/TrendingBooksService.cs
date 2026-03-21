@@ -14,11 +14,11 @@ public class TrendingBooksService : ITrendingBooksService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ApiResult<pagedResult<GetBookDto>>> GetAllTrendingBooksAsync(BookParams bookParams)
+    public async Task<ApiPagedResult<GetBookDto>> GetAllTrendingBooksAsync(BookParams bookParams)
     {
         try
         {
-            pagedResult<GetBookDto> pagedResultDto = new pagedResult<GetBookDto>();
+            ApiPagedResult<GetBookDto> pagedResultDto = new ApiPagedResult<GetBookDto>();
             var trendingbooks = await _unitOfWork.BookRepository.GetWhereIncludeAsync(b => b.IsTrending, "Author");
             var topBorrowIds = await _unitOfWork.TransactionRepository.GetTopBorrowedBooksAsync(20);
 
@@ -91,13 +91,16 @@ public class TrendingBooksService : ITrendingBooksService
             var totalcount = bookList.Count;
             bookList = bookList.Skip((bookParams.pageNumber - 1) * bookParams.pageSize).Take(bookParams.pageSize).ToList();
 
-            pagedResultDto.Result = bookList;
+            pagedResultDto.Data = bookList;
             pagedResultDto.TotalCount = totalcount;
-            return new ApiResult<pagedResult<GetBookDto>> { IsSuccess = true, Data = pagedResultDto };
+            pagedResultDto.PageNumber = bookParams.pageNumber;
+            pagedResultDto.PageSize = bookParams.pageSize;
+            pagedResultDto.IsSuccess = true;
+            return pagedResultDto;
         }
         catch (Exception ex)
         {
-            return new ApiResult<pagedResult<GetBookDto>> { IsSuccess = false, Message = ex.Message };
+            return new ApiPagedResult<GetBookDto> { IsSuccess = false, Message = ex.Message };
         }
     }
 
