@@ -3,11 +3,22 @@ export interface ApiResult<T> {
   isSuccess: boolean;
   code: number;
   data: T;
+  // Pagination fields sometimes included at the root
+  totalCount?: number;
+  pageNumber?: number;
+  pageSize?: number;
+  totalPages?: number;
 }
 
-export interface PagedResult<T> {
-  result: T[];
+export interface ApiPagedResult<T> {
+  message?: string;
+  isSuccess: boolean;
+  code: number;
+  data: T[];
   totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 export interface AuthorParams {
@@ -19,13 +30,32 @@ export interface AuthorParams {
   isActive?: boolean | null;
 }
 
+export interface BookParams {
+  pageNumber?: number;
+  pageSize?: number;
+  sortOrder?: number;
+  sortField?: string | null;
+  search?: string | null;
+  authorId?: number | null;
+}
+
 export interface Book {
   id: number;
   title: string;
-  authorName: string;
-  imageUrl?: string;
+  description?: string;
+  authorId: number;
+  authorFullName: string;
+  authorImage?: string;
+  categoryId: number;
+  categoryName: string;
+  publicationYear: number;
   availableCopies: number;
+  totalCopies: number;
+  coverImageUrl?: string;
+  isTrending: boolean;
+  hasAvailableCopies: boolean;
 }
+
 
 export interface Author {
   id: number;

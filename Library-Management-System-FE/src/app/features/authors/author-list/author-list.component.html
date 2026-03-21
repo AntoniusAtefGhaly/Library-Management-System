@@ -4,6 +4,14 @@
     <span class="badge bg-secondary">{{ totalCount }} Authors Total</span>
   </div>
 
+
+  <div>
+    <input type="text" class="form-control" placeholder="Search by name or description..." [(ngModel)]="searchTerm"
+      (keyup.enter)="onSearch()">
+    <button class="btn btn-primary" (click)="onSearch()">Search</button>
+
+  </div>
+
   <div *ngIf="loading" class="text-center py-5">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Loading...</span>
@@ -21,10 +29,10 @@
       <div class="card h-100 shadow-sm border-0 bg-light transition-hover">
         <div class="card-body">
           <div class="d-flex align-items-center mb-3">
-            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
-                 style="width: 50px; height: 50px; font-weight: bold; font-size: 1.2rem;">
-              {{ author.fullName.charAt(0) }}
-            </div>
+            <img [src]="author.imageURL | imageURL" class="rounded-circle me-3" width="64" height="64"
+              style="object-fit: cover;" [alt]="author.fullName" (error)="author.imageURL = undefined">
+            <!-- The (error) fallback handles broken links by reverting to undefined, which triggers the method's placeholder -->
+
             <div>
               <h5 class="card-title mb-0 fw-bold text-dark">{{ author.fullName }}</h5>
               <small class="text-muted"><i class="bi bi-book me-1"></i> {{ author.bookCount }} Published Books</small>
@@ -34,7 +42,8 @@
             {{ author.description }}
           </p>
           <div class="mt-3 d-flex justify-content-between align-items-center">
-            <span class="badge" [ngClass]="author.isActive ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
+            <span class="badge"
+              [ngClass]="author.isActive ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'">
               {{ author.isActive ? 'Active' : 'Inactive' }}
             </span>
             <button class="btn btn-sm btn-outline-primary rounded-pill px-3">View Details</button>

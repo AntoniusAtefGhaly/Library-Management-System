@@ -1,1 +1,80 @@
-<p>book-list works!</p>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold"><i class="bi bi-book-half me-2 text-primary"></i> Books Directory</h2>
+    <span class="badge bg-secondary">{{ totalCount }} Books Found</span>
+  </div>
+
+  <!-- Search Filter Block -->
+  <div class="card shadow-sm border-0 mb-4 bg-light">
+    <div class="card-body">
+      <div class="row g-3">
+        <div class="col-md-10">
+          <input type="text" class="form-control form-control-lg" placeholder="Search by title or description..."
+            [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+        </div>
+        <div class="col-md-2 d-grid">
+          <button class="btn btn-primary btn-lg shadow-sm fw-bold" (click)="onSearch()">
+            <i class="bi bi-search me-1"></i> Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="books.length === 0" class="alert alert-info text-center py-5 shadow-sm border-0">
+    <i class="bi bi-journal-x" style="font-size: 3rem;"></i>
+    <p class="mt-3 mb-0 fs-5">No books match your criteria.</p>
+  </div>
+
+  <!-- Books Grid -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" *ngIf="books.length > 0">
+    <div class="col" *ngFor="let book of books">
+      <div class="card h-100 shadow-sm border-0 transition-hover">
+        <div class="card-body d-flex flex-column text-center">
+
+          <!-- Book Placeholder / Cover -->
+          <div *ngIf="!book.coverImageUrl"
+            class="bg-primary bg-gradient text-white rounded d-flex align-items-center justify-content-center mx-auto mb-3 shadow-sm"
+            style="width: 80px; height: 110px; font-weight: bold; font-size: 2rem;">
+            {{ book.title.charAt(0) | uppercase }}
+          </div>
+
+          <img *ngIf="book.coverImageUrl" [src]="book.coverImageUrl | imageURL" class="rounded mx-auto mb-3 shadow-sm"
+            style="width: 80px; height: 110px; object-fit: cover;" [alt]="book.title"
+            (error)="book.coverImageUrl = undefined">
+
+          <h5 class="card-title fw-bold text-dark text-truncate" [title]="book.title">{{ book.title }}</h5>
+          <p class="text-muted small mb-auto">By: <span class="fw-medium">{{ book.authorFullName }}</span></p>
+
+          <hr class="my-3">
+
+          <div class="d-flex justify-content-center align-items-center">
+            <span class="badge rounded-pill px-3 py-2"
+              [ngClass]="book.availableCopies > 0 ? 'bg-success-subtle text-success border border-success-subtle' : 'bg-danger-subtle text-danger border border-danger-subtle'">
+              <i class="bi" [ngClass]="book.availableCopies > 0 ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+              {{ book.availableCopies > 0 ? book.availableCopies + ' Copies Available' : 'Out of Stock' }}
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination Controls -->
+  <nav *ngIf="totalPages > 1" aria-label="Book pagination" class="mt-5">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="pageNumber === 1">
+        <button class="page-link" (click)="goToPage(pageNumber - 1)">Previous</button>
+      </li>
+      <li class="page-item" *ngFor="let page of pages" [class.active]="pageNumber === page">
+        <button class="page-link" (click)="goToPage(page)">{{ page }}</button>
+      </li>
+      <li class="page-item" [class.disabled]="pageNumber === totalPages">
+        <button class="page-link" (click)="goToPage(pageNumber + 1)">Next</button>
+      </li>
+    </ul>
+  </nav>
+
+</div>

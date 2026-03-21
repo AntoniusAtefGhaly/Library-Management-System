@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LmsService } from '../../../core/services/lms.service';
 import { Author, AuthorParams } from '../../../core/models/lms.models';
+import { ImageUrlPipe } from '../../../core/pipes/image-url.pipe';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-author-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ImageUrlPipe, FormsModule],
   templateUrl: './author-list.component.html',
   styleUrl: './author-list.component.css'
 })
@@ -19,6 +21,7 @@ export class AuthorListComponent implements OnInit {
   pageSize = 10;
   totalPages = 0;
   pages: number[] = [];
+  searchTerm: string = '';
 
   constructor(private lmsService: LmsService) { }
 
@@ -33,16 +36,19 @@ export class AuthorListComponent implements OnInit {
       pageSize: this.pageSize,
       sortOrder: 1,
       sortField: 'fullName',
-      search: null,
+      search: this.searchTerm,
       isActive: null
     };
 
     this.lmsService.getAuthorsPaged(params).subscribe({
       next: (response) => {
         if (response.isSuccess) {
-          this.authors = response.data.result;
-          this.totalCount = response.data.totalCount;
+          // Based on your JSON, 'data' is the array of authors, 
+          // and 'totalCount' is right at the root of the response!
+          this.authors = response.data;
+          this.totalCount = response.totalCount || 0;
           this.calculatePages();
+
         }
         this.loading = false;
       },
@@ -63,5 +69,10 @@ export class AuthorListComponent implements OnInit {
       this.currentPage = page;
       this.loadAuthors();
     }
+  }
+  onSearch(): void {
+    this.currentPage = 1;
+    this.loadAuthors();
+    this.calculatePages();
   }
 }
