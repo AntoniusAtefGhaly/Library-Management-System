@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.PostgreSql;
 using LMS.Application;
 using LMS.Application.Services;
 using LMS.Domain.Entities;
@@ -18,7 +19,7 @@ try
 
     #region Database
     builder.Services.AddDbContext<LMSDbContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
     #endregion
 
     // Add Hangfire services
@@ -26,7 +27,7 @@ try
         .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
         .UseSimpleAssemblyNameTypeSerializer()
         .UseRecommendedSerializerSettings()
-        .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+        .UsePostgreSqlStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
 
     // Add the processing server as IHostedService
     builder.Services.AddHangfireServer();
