@@ -7,16 +7,17 @@ EXPOSE 8080
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy EVERYTHING in the current folder (Library-Management-System-BE)
+# Copy EVERYTHING from the repository root
 COPY . .
 
-# Restore and Build
-RUN dotnet restore "LMS.API/LMS.API.csproj"
-RUN dotnet build "LMS.API/LMS.API.csproj" -c Release -o /app/build
+# Restore and Build using the full path to the solution
+RUN dotnet restore "Library-Management-System-BE/LMS.sln"
+RUN dotnet build "Library-Management-System-BE/LMS.sln" -c Release -o /app/build
 
-# Publish the app
+# Publish the API project
 FROM build AS publish
-RUN dotnet publish "LMS.API/LMS.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
+WORKDIR "/src/Library-Management-System-BE/LMS.API"
+RUN dotnet publish "LMS.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # Final stage: copy the published app to the runtime image
 FROM base AS final
