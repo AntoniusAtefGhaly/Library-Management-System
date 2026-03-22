@@ -1,0 +1,10 @@
+.dockerignore
+Dockerfile
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
+.git/
+.github/
+*.db
+appsettings.Development.json
