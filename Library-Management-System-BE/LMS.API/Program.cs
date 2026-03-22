@@ -13,7 +13,12 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Enable legacy timestamp behavior for PostgreSQL to support Local Kind DateTime
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 try
+
 {
 
 

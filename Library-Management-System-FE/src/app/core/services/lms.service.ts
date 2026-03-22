@@ -7,7 +7,7 @@ import { ApiResult, Author, AuthorParams,BookParams,Book } from '../models/lms.m
   providedIn: 'root'
 })
 export class LmsService {
-  private apiUrl = 'https://localhost:7279/api'; // Based on your backend settings
+  private apiUrl = 'https://library-management-api-h3en.onrender.com/api'; // Live Render backend
 
   constructor(private http: HttpClient) { }
 
