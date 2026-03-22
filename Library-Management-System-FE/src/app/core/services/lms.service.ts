@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ApiResult, Author, AuthorParams,BookParams,Book } from '../models/lms.models';
+import { ApiResult, Author, AuthorParams, BookParams, Book } from '../models/lms.models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
+
   providedIn: 'root'
 })
 export class LmsService {
-  private apiUrl = 'https://library-management-api-h3en.onrender.com/api'; // Live Render backend
+  private apiUrl = environment.apiUrl;
+
 
   constructor(private http: HttpClient) { }
 
