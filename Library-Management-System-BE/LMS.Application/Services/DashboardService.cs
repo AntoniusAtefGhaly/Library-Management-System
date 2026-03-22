@@ -1,4 +1,5 @@
 using LMS.Application.Dtos;
+using LMS.Domain.Enums;
 using LMS.Domain.Interfaces.Repositories;
 
 namespace LMS.Application.Services

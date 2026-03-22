@@ -3,6 +3,7 @@ using LMS.Application.Dtos.Transaction;
 using LMS.Application.Managers.Interfaces;
 using LMS.Application.Shared.Models;
 using LMS.Domain.Entities;
+using LMS.Domain.Enums;
 using LMS.Domain.Interfaces.Repositories;
 
 

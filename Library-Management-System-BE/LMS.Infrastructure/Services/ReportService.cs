@@ -4,6 +4,7 @@ using LMS.Application.Dtos.Book;
 using LMS.Application.Dtos.Transaction;
 using LMS.Application.Dtos.User;
 using LMS.Domain.Entities;
+using LMS.Domain.Enums;
 using LMS.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Identity;
 using OfficeOpenXml;
@@ -181,7 +182,7 @@ public class ReportService : IReportService
         foreach (var transaction in transactions)
         {
             var cell = worksheet.Cells[row, 1, row, 8];
-            bool isOverdue = transaction.Status == TransactionStatus.Overdue.ToString();
+            bool isOverdue = transaction.Status == LMS.Domain.Enums.TransactionStatus.Overdue.ToString();
             bool isReturned = transaction.Status == TransactionStatus.Returned.ToString();
             bool isIssued = transaction.Status == TransactionStatus.Issued.ToString();
 

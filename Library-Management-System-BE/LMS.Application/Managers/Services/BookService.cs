@@ -1,11 +1,10 @@
 using LMS.Application.Dtos;
 using LMS.Application.Dtos.Book;
 using LMS.Application.Shared.Models;
-
 using LMS.Domain.Entities;
+using LMS.Domain.Enums;
 using LMS.Domain.Interfaces.Repositories;
 using Microsoft.AspNetCore.Http;
-
 
 
 namespace LMS.Application;
@@ -20,7 +19,8 @@ public class BookService : IBookService
     public BookService(
         IUnitOfWork unitOfWork,
         IHelperService helperService,
-        ICurrentUserService currentUserService, IReportService reportService) {
+        ICurrentUserService currentUserService, IReportService reportService)
+    {
         _reportService = reportService;
         _unitOfWork = unitOfWork;
         _helperService = helperService;
@@ -32,13 +32,14 @@ public class BookService : IBookService
         try
         {
             var books = await _unitOfWork.BookRepository.getAllBooksWithAuthorandCategory();
-            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto() { 
-                Title = b.Title, 
-                Description = b.Description, 
-                PublicationYear = b.PublicationYear, 
-                AvailableCopies = b.AvailableCopies, 
-                TotalCopies = b.TotalCopies, 
-                Category = b.Category.Name, 
+            List<BookWithDetailsDto> booksWithDetails = books.Select(b => new BookWithDetailsDto()
+            {
+                Title = b.Title,
+                Description = b.Description,
+                PublicationYear = b.PublicationYear,
+                AvailableCopies = b.AvailableCopies,
+                TotalCopies = b.TotalCopies,
+                Category = b.Category.Name,
                 Author = b.Author.FullName,
                 HasAvailableCopies = b.AvailableCopies > 0
             }).ToList();

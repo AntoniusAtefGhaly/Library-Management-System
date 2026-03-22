@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace LMS.Application;
@@ -8,7 +8,7 @@ public class EncryptionService : IEncryptionService
 
     private const string ENCRYPT_KEY = "Ya)RH*qy6~7d-v&}mwr24G";
     private const string DECRYPT_KEY = "Ya)RH*qy6~7d-v&}mwr24G";
-    private static readonly byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+    private static readonly byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF, 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
 
     #endregion
 

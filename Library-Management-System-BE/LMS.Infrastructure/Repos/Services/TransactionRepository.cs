@@ -1,6 +1,6 @@
 using LMS.Domain.Entities;
+using LMS.Domain.Enums;
 using LMS.Domain.Interfaces.Repositories;
-using LMS.Application;
 using Microsoft.EntityFrameworkCore;
 
 namespace LMS.Infrastructure;

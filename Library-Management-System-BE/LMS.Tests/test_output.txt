@@ -1,0 +1,33 @@
+  Determining projects to restore...
+C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Application\LMS.Application.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://devops.nupco.com/NUPCOCollection/iNUPCO/_packaging/INUPCO/nuget/v3/index.json. [C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\LMS.Tests.csproj]
+C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Domain\LMS.Domain.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://devops.nupco.com/NUPCOCollection/iNUPCO/_packaging/INUPCO/nuget/v3/index.json. [C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\LMS.Tests.csproj]
+  All projects are up-to-date for restore.
+C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Application\LMS.Application.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://devops.nupco.com/NUPCOCollection/iNUPCO/_packaging/INUPCO/nuget/v3/index.json.
+C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Domain\LMS.Domain.csproj : warning NU1900: Error occurred while getting package vulnerability data: Unable to load the service index for source https://devops.nupco.com/NUPCOCollection/iNUPCO/_packaging/INUPCO/nuget/v3/index.json.
+  LMS.Domain -> C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Domain\bin\Debug\net8.0\LMS.Domain.dll
+  LMS.Application -> C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Application\bin\Debug\net8.0\LMS.Application.dll
+  LMS.Tests -> C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\bin\Debug\net8.0\LMS.Tests.dll
+Test run for C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\bin\Debug\net8.0\LMS.Tests.dll (.NETCoreApp,Version=v8.0)
+A total of 1 test files matched the specified pattern.
+  Failed LMS.Tests.Application.Services.FeedbackServiceTests.AddFeedback_ShouldFail_WhenUserHasAlreadyReviewed [83 ms]
+  Error Message:
+   System.Reflection.TargetException : Object does not match target type.
+  Stack Trace:
+     at System.Reflection.MethodInvokerCommon.ValidateInvokeTarget(Object target, MethodBase method)
+   at System.Reflection.RuntimeMethodInfo.InvokePropertySetter(Object obj, BindingFlags invokeAttr, Binder binder, Object parameter, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.SetValue(Object obj, Object value, Object[] index)
+   at LMS.Tests.Application.Services.FeedbackServiceTests.CreateFeedback(Int32 id, Int32 userId, Int32 bookId) in C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\Application\Services\FeedbackServiceTests.cs:line 46
+   at LMS.Tests.Application.Services.FeedbackServiceTests.AddFeedback_ShouldFail_WhenUserHasAlreadyReviewed() in C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\Application\Services\FeedbackServiceTests.cs:line 118
+--- End of stack trace from previous location ---
+  Failed LMS.Tests.Application.Services.FeedbackServiceTests.GetAllFeedbacksAsync_ShouldReturnAllFeedbacks [< 1 ms]
+  Error Message:
+   System.Reflection.TargetException : Object does not match target type.
+  Stack Trace:
+     at System.Reflection.MethodInvokerCommon.ValidateInvokeTarget(Object target, MethodBase method)
+   at System.Reflection.RuntimeMethodInfo.InvokePropertySetter(Object obj, BindingFlags invokeAttr, Binder binder, Object parameter, CultureInfo culture)
+   at System.Reflection.RuntimePropertyInfo.SetValue(Object obj, Object value, Object[] index)
+   at LMS.Tests.Application.Services.FeedbackServiceTests.CreateFeedback(Int32 id, Int32 userId, Int32 bookId) in C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\Application\Services\FeedbackServiceTests.cs:line 46
+   at LMS.Tests.Application.Services.FeedbackServiceTests.GetAllFeedbacksAsync_ShouldReturnAllFeedbacks() in C:\Repos\Angular\Library-Management-System\Library-Management-System-BE\LMS.Tests\Application\Services\FeedbackServiceTests.cs:line 54
+--- End of stack trace from previous location ---
+
+Failed!  - Failed:     2, Passed:    29, Skipped:     0, Total:    31, Duration: 156 ms - LMS.Tests.dll (net8.0)
