@@ -22,17 +22,36 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
+      with:
+        fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: 17
+        distribution: 'zulu'
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
         
+    - name: Install SonarCloud scanner
+      run: |
+        dotnet tool install --global dotnet-sonarscanner
+
     - name: Restore dependencies
       run: dotnet restore LMS.sln
       
-    - name: Build
-      run: dotnet build LMS.sln --configuration Release --no-restore
-      
+    - name: Build and analyze
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      run: |
+        dotnet-sonarscanner begin /k:"AntoniusAtefGhaly_Library-Management-System" /o:"antoniusatefghaly" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+        dotnet build LMS.sln --configuration Release --no-restore
+        dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
     - name: Test
       run: dotnet test LMS.sln --configuration Release --no-build --verbosity normal
+
