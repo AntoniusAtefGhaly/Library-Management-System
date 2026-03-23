@@ -39,7 +39,9 @@ jobs:
       run: npm run build --if-present
 
     - name: SonarCloud Scan
-      uses: sonarsource/sonarqube-scan-action@v4
+      uses: sonarsource/sonarqube-scan-action@v6
+
+
 
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
