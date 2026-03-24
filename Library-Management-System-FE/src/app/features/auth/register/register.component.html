@@ -1,0 +1,126 @@
+<div class="register-container">
+  <div class="register-card glass">
+    <div class="register-header">
+      <div class="logo-box">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h1>Create Account</h1>
+      <p>Join our modern library community</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <div class="row">
+        <div class="form-group col">
+          <label for="firstName">First Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input 
+              type="text" 
+              id="firstName" 
+              formControlName="firstName" 
+              placeholder="John"
+              [class.invalid]="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid"
+            >
+          </div>
+          <div *ngIf="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid" class="error-text">
+            At least 2 characters required.
+          </div>
+        </div>
+        <div class="form-group col">
+          <label for="lastName">Last Name</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user"></i>
+            <input 
+              type="text" 
+              id="lastName" 
+              formControlName="lastName" 
+              placeholder="Doe"
+              [class.invalid]="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid"
+            >
+          </div>
+          <div *ngIf="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid" class="error-text">
+            At least 2 characters required.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-wrapper">
+          <i class="fas fa-envelope"></i>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email" 
+            placeholder="name@example.com"
+            [class.invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <div class="input-wrapper">
+          <i class="fas fa-phone"></i>
+          <input 
+            type="text" 
+            id="phoneNumber" 
+            formControlName="phoneNumber" 
+            placeholder="+123456789"
+            [class.invalid]="registerForm.get('phoneNumber')?.touched && registerForm.get('phoneNumber')?.invalid"
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock"></i>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password" 
+            placeholder="••••••••"
+            [class.invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid"
+          >
+        </div>
+        <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="error-text">
+          At least 6 characters required.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="input-wrapper">
+          <i class="fas fa-lock"></i>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            formControlName="confirmPassword" 
+            placeholder="••••••••"
+            [class.invalid]="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched"
+          >
+        </div>
+        <div *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched" class="error-text">
+          Passwords do not match.
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-error">
+        {{ error }}
+      </div>
+      <div *ngIf="success" class="alert alert-success">
+        {{ success }}
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid || loading" class="btn-primary">
+        <span *ngIf="!loading">Create account</span>
+        <span *ngIf="loading" class="loader"></span>
+      </button>
+
+      <div class="register-footer">
+        Already have an account? <a routerLink="/login">Login</a>
+      </div>
+    </form>
+  </div>
+</div>

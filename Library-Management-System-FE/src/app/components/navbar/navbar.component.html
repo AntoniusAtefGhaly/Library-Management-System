@@ -4,9 +4,11 @@
       <i class="bi bi-book-half me-2"></i>
       LMS Pro
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
@@ -20,11 +22,26 @@
           </a>
         </li>
       </ul>
-      <div class="d-flex">
-        <button class="btn btn-outline-light btn-sm">
-          <i class="bi bi-gear-fill"></i>
-        </button>
+
+      <div class="d-flex align-items-center">
+        <!-- Not logged in -->
+        <ng-container *ngIf="!(authService.currentUser$ | async)">
+          <a routerLink="/login" class="btn btn-outline-light btn-sm me-2">Login</a>
+          <a routerLink="/register" class="btn btn-light btn-sm">Register</a>
+        </ng-container>
+
+        <!-- Logged in -->
+        <ng-container *ngIf="authService.currentUser$ | async as user">
+          <span class="text-white me-3 d-none d-md-inline">
+            <i class="bi bi-person-circle me-1"></i>
+            Hi, {{ user.firstName }}
+          </span>
+          <button (click)="logout()" class="btn btn-danger btn-sm">
+            <i class="bi bi-box-arrow-right"></i> Logout
+          </button>
+        </ng-container>
       </div>
     </div>
   </div>
 </nav>
+
